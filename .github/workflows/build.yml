@@ -1,0 +1,42 @@
+name: Build and validate experimental payload
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - name: Python dependencies and source audit
+        run: |
+          python3 -m pip install -r requirements-dev.txt
+          python3 tools/check_public_tree.py
+          python3 -m unittest discover -s tests
+      - name: Build toolchains
+        run: |
+          docker build -t ffinder-image-tools:local tools/image-builder
+          docker build -t ffinder-ui-tools:local tools/ui-builder
+          docker build -t ffinder-web-tools:local web-service
+      - name: Build experimental identity-free package
+        run: python3 tools/build_release.py --version 0.1.0-dev --build
+      - name: Linux fake-printer integration tests
+        run: docker run --rm --entrypoint python3 --mount type=bind,source="$GITHUB_WORKSPACE",target=/work ffinder-web-tools:local web-service/tests/integration.py
+      - name: Dashboard browser and Orca header regression
+        run: docker run --rm --entrypoint node --mount type=bind,source="$GITHUB_WORKSPACE",target=/work ffinder-web-tools:local web-service/tests/orca_headers.cjs
+      # Binary publication remains a deliberate release step. CI retains only
+      # manifests here; hardware installer gates remain open. A binary release
+      # must publish both generated ZIPs (USB + runtime sources) together.
+      - name: Retain generic package manifests
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: finder-revival-experimental
+          path: |
+            dist/finder-revival-0.1.0-dev/SHA256SUMS
+            dist/finder-revival-0.1.0-dev/manifest.json
+          if-no-files-found: error
+          retention-days: 14

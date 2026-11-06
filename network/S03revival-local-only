@@ -1,0 +1,35 @@
+#!/bin/sh
+# IPv4 WAN reject routes survive ordinary DHCP default-route changes.
+# Connected LAN routes are more specific and remain usable. Not a firewall.
+set -eu
+STATE=/run/revival-network
+present() {
+    awk -v destination="$1" '$2==destination && $8=="00000080" && $4 ~ /020[01]$/ {ok=1} END {exit !ok}' /proc/net/route
+}
+case "${1:-start}" in
+ start)
+    if [ -e /proc/net/if_inet6 ] || [ -d /proc/sys/net/ipv6 ]; then
+        echo 'Unsupported IPv6 stack: configure a complete upstream policy.' >&2
+        exit 1
+    fi
+    mkdir -p "$STATE"; chmod 700 "$STATE"
+    if ! present 00000000; then
+        route add -net 0.0.0.0 netmask 128.0.0.0 reject
+        touch "$STATE/owns-low"
+    fi
+    if ! present 00000080; then
+        route add -net 128.0.0.0 netmask 128.0.0.0 reject
+        touch "$STATE/owns-high"
+    fi
+    "$0" status
+    ;;
+ stop)
+    if [ -f "$STATE/owns-low" ]; then route del -net 0.0.0.0 netmask 128.0.0.0 reject; rm "$STATE/owns-low"; fi
+    if [ -f "$STATE/owns-high" ]; then route del -net 128.0.0.0 netmask 128.0.0.0 reject; rm "$STATE/owns-high"; fi
+    ;;
+ status)
+    present 00000000 && present 00000080
+    echo 'Revival IPv4 WAN reject routes active; connected LAN routes retained.'
+    ;;
+ *) exit 2 ;;
+esac

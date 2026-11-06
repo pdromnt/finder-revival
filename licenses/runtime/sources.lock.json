@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "packages": [
+    {
+      "package": "glibc",
+      "version": "2.41-11",
+      "files": [
+        {
+          "name": "glibc_2.41-11.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.41-11.dsc",
+          "sha256": "07b4bbd9b93343a90e89e64ae1227286884ca6e04b8a40553edc5a1aba158ed0",
+          "bytes": 7544
+        },
+        {
+          "name": "glibc_2.41.orig.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.41.orig.tar.xz",
+          "sha256": "f24aa441021121a79266f0d75242706cab8843a47901fefe74527491807f1998",
+          "bytes": 20323540
+        },
+        {
+          "name": "glibc_2.41-11.debian.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.41-11.debian.tar.xz",
+          "sha256": "8931fe5a287262e8d0adcbdde28d08cefbe955edf7abf4c32540a5ad7f0e470d",
+          "bytes": 437792
+        }
+      ]
+    },
+    {
+      "package": "gcc-14",
+      "version": "14.2.0-19",
+      "files": [
+        {
+          "name": "gcc-14_14.2.0-19.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/g/gcc-14/gcc-14_14.2.0-19.dsc",
+          "sha256": "7db1e202cce66617e9134a662c877a3a773de5b612fd52179815877e0ecfb847",
+          "bytes": 47347
+        },
+        {
+          "name": "gcc-14_14.2.0.orig.tar.gz",
+          "url": "https://deb.debian.org/debian/pool/main/g/gcc-14/gcc-14_14.2.0.orig.tar.gz",
+          "sha256": "e162a5ef3f0077ecae598c6556908d2ab80841532df3398072a96a6df6e6aa29",
+          "bytes": 94299633
+        },
+        {
+          "name": "gcc-14_14.2.0-19.debian.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/g/gcc-14/gcc-14_14.2.0-19.debian.tar.xz",
+          "sha256": "31cbab4bafa48aa1c540497bd8098cbcf98e673778f927651ed944709f687781",
+          "bytes": 2577016
+        }
+      ]
+    },
+    {
+      "package": "cross-toolchain-base-ports",
+      "version": "74",
+      "files": [
+        {
+          "name": "cross-toolchain-base-ports_74.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/c/cross-toolchain-base-ports/cross-toolchain-base-ports_74.dsc",
+          "sha256": "9b196aa7547a1a77a61825b85761b20f2a2c0acd093305db13fb2064dd9d29ad",
+          "bytes": 6982
+        },
+        {
+          "name": "cross-toolchain-base-ports_74.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/c/cross-toolchain-base-ports/cross-toolchain-base-ports_74.tar.xz",
+          "sha256": "722b5121e742b5b544423fd6e45be136d48266d986ffbf12891d2e203a5495d3",
+          "bytes": 45488
+        }
+      ]
+    },
+    {
+      "package": "gcc-14-cross-ports",
+      "version": "10",
+      "files": [
+        {
+          "name": "gcc-14-cross-ports_10.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/g/gcc-14-cross-ports/gcc-14-cross-ports_10.dsc",
+          "sha256": "1caa1aee2146f1374b149924291c0b82175c20df2ae6ae604a5157f9b63350df",
+          "bytes": 43666
+        },
+        {
+          "name": "gcc-14-cross-ports_10.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/g/gcc-14-cross-ports/gcc-14-cross-ports_10.tar.xz",
+          "sha256": "979b80f58f4a77cbb7f0562e7413ef688a0d66e60f954c9581bc14fb988dbda2",
+          "bytes": 41972
+        }
+      ]
+    },
+    {
+      "package": "linux",
+      "version": "6.12.38-1",
+      "files": [
+        {
+          "name": "linux_6.12.38-1.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/l/linux/linux_6.12.38-1.dsc",
+          "sha256": "9f4a7aaebf36acdebb649d0936ee4cb27ef61029e99999f517cff9ebbe12d4b3",
+          "bytes": 219407
+        },
+        {
+          "name": "linux_6.12.38.orig.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/l/linux/linux_6.12.38.orig.tar.xz",
+          "sha256": "8c89ced59bbd40280ddbe51e50114e2cf7b665104e16116949bd205c17371c0d",
+          "bytes": 151129260
+        },
+        {
+          "name": "linux_6.12.38-1.debian.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/l/linux/linux_6.12.38-1.debian.tar.xz",
+          "sha256": "7f5e17a2422fdbc34cc1ff64b97c475499d82a7e454ca3fc469767cf5670ff5b",
+          "bytes": 1665920
+        }
+      ]
+    },
+    {
+      "package": "binutils",
+      "version": "2.44-3",
+      "files": [
+        {
+          "name": "binutils_2.44-3.dsc",
+          "url": "https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.44-3.dsc",
+          "sha256": "5abd1ae1adb61fd8ecbadfdc16668738668e81c745884aefa0ce97791b2a74b8",
+          "bytes": 11429
+        },
+        {
+          "name": "binutils_2.44.orig.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.44.orig.tar.xz",
+          "sha256": "c41a0272424f41bb01bf828e7ffef1b2d59d1788064fd6b5f1d971717e9320b8",
+          "bytes": 27504768
+        },
+        {
+          "name": "binutils_2.44-3.debian.tar.xz",
+          "url": "https://deb.debian.org/debian/pool/main/b/binutils/binutils_2.44-3.debian.tar.xz",
+          "sha256": "555c856d6fb5a797c2692c24c3083e7b1a76811a470eaab01d90c969c2f92784",
+          "bytes": 131700
+        }
+      ]
+    }
+  ],
+  "binary_packages": [
+    {
+      "binary": "binutils-arm-linux-gnueabi",
+      "version": "2.44-3",
+      "source": "binutils",
+      "source_version": "2.44-3",
+      "built_using": ""
+    },
+    {
+      "binary": "gcc-14-arm-linux-gnueabi",
+      "version": "14.2.0-19cross1",
+      "source": "gcc-14-cross-ports",
+      "source_version": "10",
+      "built_using": "gcc-14 (= 14.2.0-19)"
+    },
+    {
+      "binary": "libc6-armel-cross",
+      "version": "2.41-11cross1",
+      "source": "cross-toolchain-base-ports",
+      "source_version": "74",
+      "built_using": "binutils (= 2.44-3), linux (= 6.12.38-1), gcc-14 (= 14.2.0-19), glibc (= 2.41-11)"
+    },
+    {
+      "binary": "libc6-dev-armel-cross",
+      "version": "2.41-11cross1",
+      "source": "cross-toolchain-base-ports",
+      "source_version": "74",
+      "built_using": "binutils (= 2.44-3), linux (= 6.12.38-1), gcc-14 (= 14.2.0-19), glibc (= 2.41-11)"
+    },
+    {
+      "binary": "libgcc-14-dev-armel-cross",
+      "version": "14.2.0-19cross1",
+      "source": "gcc-14-cross-ports",
+      "source_version": "10",
+      "built_using": "gcc-14 (= 14.2.0-19)"
+    },
+    {
+      "binary": "libgcc-s1-armel-cross",
+      "version": "14.2.0-19cross1",
+      "source": "gcc-14-cross-ports",
+      "source_version": "10",
+      "built_using": "gcc-14 (= 14.2.0-19)"
+    }
+  ]
+}

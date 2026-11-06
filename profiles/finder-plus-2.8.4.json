@@ -1,0 +1,23 @@
+{
+  "id": "finder-plus-2.8.4",
+  "status": "experimental-single-device",
+  "board": "Finder Plus V2.0.2 / About 2.X",
+  "gui_version": "2.8.4.366 F2.12 20210823",
+  "architecture": "ARMv5TE soft-float",
+  "kernel": "3.10.32+",
+  "glibc": "2.18",
+  "stock_gui_path": "/PROGRAM/software/2.8.4/finder-plus-arm",
+  "stock_gui_sha256": "aa73d2932cd13aff93124d82c2ac304b41adc7d52fd206cc23b874cdbe065375",
+  "stock_kernel_sha256": "ffcf3a7a15d06d42d14b104b2e63ed824888e89bbf21c4a5c330b911c5d35e87",
+  "approved_splash_kernel_sha256": "651ded763ab91ea7b8584ba8d7f9cfb80b53a1c57835d8c62b855b893efdbdb0",
+  "cached_kernel_path": "/PROGRAM/kernel/1.0.366/uImage-finder-367-20190814",
+  "emmc_sectors": 15269888,
+  "partitions": {"boot": 1, "root": 2, "data": 3},
+  "usb_model_marker": "0007",
+  "logical_display": [480, 320],
+  "framebuffer": [320, 480, "RGB565"],
+  "ports": {"stock_tcp": 8899, "dashboard": 8081, "camera": 8080, "ssh": 2222},
+  "cloud_switches": ["/opt/flashforge/cloud-ff", "/opt/flashforge/cloud-mymini"],
+  "cloud_off_bytes_hex": "4f46460d0a",
+  "identity_policy": "preserve-in-place; never clone rootfs/data or owner keys"
+}

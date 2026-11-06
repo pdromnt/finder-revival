@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+WATCH=/PROGRAM/revival-web/camera-watch.sh
+PIDFILE=/run/revival-camera/watch.pid
+running() {
+    [ -f "$PIDFILE" ] || return 1
+    read -r process < "$PIDFILE"
+    case "$process" in ''|*[!0-9]*) return 1 ;; esac
+    [ -r "/proc/$process/cmdline" ] && grep -Fq "$WATCH" "/proc/$process/cmdline"
+}
+case "${1:-start}" in
+ start)
+    running && exit 0
+    mkdir -p /run/revival-camera
+    chmod 700 /run/revival-camera
+    (cd /PROGRAM/revival-web && sha256sum -c SHA256SUMS >/run/revival-camera/integrity.log)
+    nohup /bin/sh "$WATCH" >/dev/null 2>&1 </dev/null &
+    echo $! > "$PIDFILE"
+    ;;
+ stop)
+    if running; then kill -TERM "$process"; fi
+    rm -f "$PIDFILE"
+    ;;
+ status) running && echo "Finder USB camera watcher is running (PID $process)." ;;
+ *) exit 1 ;;
+esac

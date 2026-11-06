@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+CONFIG=/etc/revival/sshd_config
+PID=/run/revival-sshd.pid
+running() {
+    [ -r "$PID" ] || return 1
+    read -r process < "$PID"
+    case "$process" in ''|*[!0-9]*) return 1 ;; esac
+    [ "$(cat "/proc/$process/comm" 2>/dev/null)" = sshd ] && kill -0 "$process" 2>/dev/null
+}
+case "${1:-start}" in
+ start)
+    [ -s /etc/revival/authorized_keys ] || exit 0
+    [ -r "$CONFIG" ] || exit 1
+    running && exit 0
+    if grep -q '^HostKey /etc/revival/ssh_host_ed25519_key$' "$CONFIG" &&
+       [ ! -e /etc/revival/ssh_host_ed25519_key ]; then
+        umask 077
+        ssh-keygen -q -t ed25519 -N '' -f /etc/revival/ssh_host_ed25519_key
+    fi
+    /usr/sbin/sshd -t -f "$CONFIG"
+    /usr/sbin/sshd -f "$CONFIG" -E /run/revival-sshd.log
+    ;;
+ stop)
+    if running; then kill "$process"; fi
+    ;;
+ status) running ;;
+ *) exit 2 ;;
+esac

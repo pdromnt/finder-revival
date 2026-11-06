@@ -1,0 +1,13 @@
+#!/bin/sh
+# Vendor diagnostics are volatile. Never create persistent log backups here.
+case "${1:-start}" in
+    start)
+        mkdir -p /run/revival-logs || exit 1
+        # Hard ceiling for the entire vendor log area, including supervisor.
+        if ! grep -q ' /run/revival-logs tmpfs ' /proc/mounts; then
+            mount -t tmpfs -o size=256k,nr_inodes=32,mode=0700,nosuid,nodev,noexec tmpfs /run/revival-logs || exit 1
+        fi
+        ;;
+    stop) : ;;
+    *) exit 1 ;;
+esac

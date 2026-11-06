@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+APP=/PROGRAM/revival-web/revival-web
+PIDFILE=/run/revival-web/daemon.pid
+running() {
+ [ -f "$PIDFILE" ] || return 1
+ read -r process < "$PIDFILE"
+ case "$process" in ''|*[!0-9]*) return 1 ;; esac
+ [ "$(readlink "/proc/$process/exe" 2>/dev/null)" = "$APP" ]
+}
+case "${1:-start}" in
+ start)
+  running && exit 0
+  awk '$2 == "/data" {found=1} END {exit !found}' /proc/mounts
+  mkdir -p /run/revival-web
+  chmod 700 /run/revival-web
+  (cd /PROGRAM/revival-web && sha256sum -c SHA256SUMS > /run/revival-web/integrity.log)
+  ulimit -c 0
+  nohup "$APP" --root /data --www /PROGRAM/revival-web/www --state /run/revival-web --key-file /etc/revival-web/key --port 8081 > /run/revival-web/service.log 2>&1 < /dev/null &
+  echo $! > "$PIDFILE"
+  sleep 1
+  running
+  ;;
+ stop)
+  if running; then kill -TERM "$process"; fi
+  rm -f "$PIDFILE"
+  ;;
+ status)
+  running && echo "Finder Revival web service is running (PID $process)."
+  ;;
+ *) exit 1 ;;
+esac
