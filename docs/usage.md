@@ -24,7 +24,7 @@ extra source `.gcode` is kept as a user-visible file after conversion.
 
 Uploads produce a deliberate Print now / Keep for later notification, including
 external slicer uploads. Merely uploading must not start a job. Explicit API
-`print=true` is a physical-action request and needs separate supervised testing.
+`print=true` requests printing after upload.
 
 The local dashboard supplies file listing and guarded deletion missing from the
 stock TCP interface. Delete/print requests require a current file identity and

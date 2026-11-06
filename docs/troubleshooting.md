@@ -22,8 +22,9 @@ See the [reset audit](factory-reset.md). The stock action changes the display
 name, registration, language and hotspot name; it does not directly remove
 Revival program/key paths. Recheck the printer's address/hotspot and reload the
 dashboard if access or displayed identity changed. A lost network connection is
-not by itself evidence of an uninstall. Live reset/next-boot qualification is
-still pending; do not trigger another reset to diagnose a connection problem.
+not by itself evidence of an uninstall. Reset and a subsequent power cycle
+retained Revival and owner access on the development printer; do not trigger
+another reset to diagnose a connection problem.
 
 ## SSH is missing
 

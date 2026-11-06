@@ -32,5 +32,5 @@ public issues. Even hashes may identify a device; share only what is needed.
 These preservation rules describe Revival installation/updates. The vendor's
 deliberate **Factory Reset** changes the display name and clears registration,
 among other settings. Its code does not directly remove Revival keys/programs;
-see [Factory Reset](factory-reset.md) for the exact audited scope and remaining
-live-test gap.
+see [Factory Reset](factory-reset.md) for the audited scope, completed one-printer
+reset/power-cycle test and remaining coverage limits.

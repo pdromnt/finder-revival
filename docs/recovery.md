@@ -50,7 +50,10 @@ decompressor's fixed-position inflated-length word. Correct repacking keeps
 the gzip trailer at its original address using internal **FNAME header padding**.
 Never append padding after the gzip trailer. CRC checks alone were insufficient.
 
-## Maintenance without mounting data
+## UART maintenance without mounting data
+
+For ordinary installation/rollback use [USB-only maintenance](usb-maintenance.md).
+This console route remains available for recovery and manual work.
 
 Use volatile boot arguments, **without `saveenv`**, to boot the known kernel
 with a shell as PID 1 and root read-only:

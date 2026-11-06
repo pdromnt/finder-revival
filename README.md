@@ -37,23 +37,23 @@ not supported. Keep room for your own printer's backup and rollback reports.
 1. [Check hardware/firmware compatibility](docs/compatibility.md).
 2. [Read validation limits](docs/validation.md) and [back up your printer](docs/backup.md).
 3. [Understand storage corruption and repair](docs/storage-repair.md).
-4. Follow [installation](docs/installation.md), keeping [UART recovery](docs/recovery.md)
+4. Follow [installation](docs/installation.md) and the experimental
+   [USB-only workflow](docs/usb-maintenance.md), keeping [UART recovery](docs/recovery.md)
    and the [restore runbook](docs/restore.md) available.
 5. Use `http://PRINTER_IP:8081/` and [dashboard/Orca setup](docs/usage.md).
 
-[Factory Reset behavior](docs/factory-reset.md) has been traced in the supported
-stock binary. It does not directly target Revival files; a live reset and its
-subsequent boot have not been qualified.
+[Factory Reset](docs/factory-reset.md) and a subsequent power cycle passed on
+the development printer: Revival, owner access and calibration survived. The
+stock reset still changes the display name, registration, language and hotspot name.
 
 [OrcaSlicer presets and bed assets](slicer/orca/README.md) are included for
 **Finder 1 / 2 / Plus**. Enable the Guider 2s system preset before import. The
 optional PLA preset targets **AllMetal-modified hotends**. These PC-side slicer
 files have broader targets than the separately guarded firmware overlay.
 
-The integrated community USB installer is **not yet hardware-qualified**.
-Component features were installed and tested individually on one Finder.
-Packaged installation, rollback and full slice/upload/physical-print acceptance remain
-separate requirements; do not relabel fixture tests as hardware validation.
+USB-only CHECK, packaged upgrade/reinstallation and rollback, each followed by
+a normal power cycle, passed on the development Finder.
+The community installer remains experimental; see [validation](docs/validation.md).
 
 ## Your printer stays yours
 

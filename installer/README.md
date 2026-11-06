@@ -10,7 +10,9 @@ small payload size does not remove the need for backup/rollback space. See
 [backup requirements](../docs/backup.md).
 
 `flashforge_init.sh` is the RAM-only USB starter for the verified `0007` hook.
-It does not run installation automatically. The owner adds their own ordinary
+Without a one-shot request it does not install anything. Explicit CHECK, BACKUP,
+INSTALL and ROLLBACK requests use the new RAM-only BusyBox init handoff. See
+[USB-only maintenance](../docs/usb-maintenance.md); the generic ZIP is not armed. The owner adds their own ordinary
 public key as `revival/authorized_keys`; generic packages contain no keys.
 
 `maintenance-enter.sh` is executed as PID 1 from a one-shot `init=/bin/sh` boot.
@@ -36,14 +38,15 @@ There are no touch buttons, timer, invented percentage or automatic reboot.
 `/dev/fb0`, with geometry, depth, stride, pan and frame-size guards. It uses no
 image decoder, resident display process or RAM frame cache. Missing/incompatible
 display support falls back to the console and does not change install results.
-The USB starter still returns to normal startup; it does not show installation
-screens or imply that an installation happened. Generate PC previews with
+Without a maintenance request, the USB starter returns to normal startup and
+does not imply an installation happened. Explicit USB requests show maintenance
+stages and hold for manual power cycling. Generate PC previews with
 `python tools/build_install_screens.py`; the release builder packages raw frames
 and their hashes automatically, outside the persistent overlay.
 
-This integrated path is **not hardware-qualified**. Do not confuse shell syntax,
-packaging/fixture checks or individually tested components with acceptance of
-the entire installer. Follow [installation](../docs/installation.md),
+USB-only CHECK, packaged upgrade/reinstall and rollback passed on the development
+printer, including normal power cycles and protected-file comparisons.
+See [installation](../docs/installation.md),
 [identity](../docs/identity.md) and [validation](../docs/validation.md).
 
 Reports/rollback archives are private and belong on external media or the PC.

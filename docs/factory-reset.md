@@ -1,9 +1,12 @@
 # Factory Reset and Finder Revival
 
-**Code-audited against stock 2.8.4.366 F2.12 20210823; not live-reset qualified.**
+**Stock 2.8.4.366 F2.12 20210823: code-audited and reset/power-cycle tested on
+the development printer (2026-11-06).**
 The touchscreen Factory Reset action is a settings operation. It does not
 reinstall the stock firmware or intentionally uninstall Revival. A reset is
 not part of installation or a substitute for the [restore guide](restore.md).
+It does not reboot automatically; the operator power-cycled the printer after
+the immediate checks to validate the next startup separately.
 
 ## Audited touchscreen path
 
@@ -25,7 +28,8 @@ returns Yes does it perform the following operations:
 The file-writing helpers were also inspected: the relevant setters operate on
 `machine-name`, `cloud-ff`, `cloud-username-pin` and `language-config` under the
 vendor settings directory. `Tool::myexec` passes the named commands to its
-process helper. No reset routine was invoked on the printer during this audit.
+process helper. The initial code audit was read-only; the later operator-run
+hardware test is recorded below.
 
 The binary also contains a different `PickSettingsConf::resetFactory()` routine
 for `/opt/Printer` and `/etc/Printer`. That is not the handler used by the
@@ -42,37 +46,46 @@ The audited touchscreen handler does **not directly target**:
 * `/etc/revival` owner authorization/SSH host keys or `/etc/revival-web/key`.
 * The active/cached kernel, stock GUI, serial-number/calibration files or GX jobs.
 
-Thus file-level inspection indicates that the installed theme, services, keys,
-logging mitigation and outbound policy survive this settings reset. The cloud
-switches are set OFF, consistent with Revival's local-only policy. The removed
+The live reset and power-cycle checks confirmed that the installed theme,
+services, keys, logging mitigation and outbound policy survived on this target.
+Cloud switches stayed OFF, consistent with Revival's local-only policy. The removed
 `/opt/md5*` names do not overlap Revival's SHA256 manifests under `/PROGRAM`.
 
-This is an inference from the reset's code/file footprint. We have not executed
-the reset, exercised every conditional cloud/AP branch, or qualified the next
-boot after deleting vendor checksum flags. Do not describe it as a completed
-hardware reset test or a guarantee for another firmware/board.
+The result applies to this printer and installed baseline. Conditional paths
+with active cloud clients or an active hotspot were not exercised; the test
+used cloud switches OFF and Wi-Fi client mode. It is not a guarantee for another
+firmware/board.
 
 Display name and registration changes are deliberate vendor behavior, unlike
 the identity preservation promised for installing/updating Revival. Network
 access can be interrupted when an active hotspot restarts; re-establish the
 connection and reload dashboard information after a reset.
 
-## Controlled qualification still required
+## Completed hardware check
 
-A future live reset test requires explicit operator authorization because it
-changes identity/network settings. Before it, preserve this printer's current
-settings, registration, calibration and keys externally and verify UART recovery.
-After confirmation, check both immediately and after a normal reboot:
+Both the immediate post-reset state and a subsequent operator power cycle passed:
 
-1. The launcher still selects Revival; UI/service integrity checks pass.
-2. SSH host identity, owner authorization and dashboard key match the saved values.
-3. Cloud switches remain OFF, update guards load and outbound routes are active.
-4. Bounded RAM logging remains active; storage error counters/log directory
-   show no recurrence. Keep the [offline consistency-check distinction](storage-repair.md).
-5. Serial/calibration and protected print files retain their bytes; changed
-   display name/registration/hotspot/language agree with the stock reset action.
-6. Review vendor reinitialization after `/opt/md5*` removal before claiming
-   unchanged controller/library behavior.
+| Check | Observed result |
+| --- | --- |
+| Reset settings | Name `My 3D Printer`, English, hotspot SSID `finder`, registration file absent, cloud switches OFF |
+| Revival | Launcher retained; theme, logger and network guards loaded; UI/web integrity checks passed |
+| Owner access | Existing SSH host identity and owner authorization worked; dashboard key matched the saved pre-reset hash |
+| Serial/calibration | Serial, extruder/servo calibration and Z offset matched the archived PC baseline; retained after power cycle |
+| Next boot | A new boot was observed and the operator confirmed the normal menu; protected file hashes matched the immediate post-reset state |
+| Vendor checksum flags | `/opt/md5*` remained absent after startup; on-disk control and library bytes matched across boot |
+| Network/camera | LAN dashboard and control status worked; WAN reject routes and cloud/update guards were active; valid 640×480 camera JPEG |
+| Logging/storage | Stock log sink remained `/dev/null`; 256 KiB RAM cap active; root/data error counts zero; valid empty persistent log directory |
+
+Storage checks were read-only online observations, not another offline fsck.
+Keep the [offline consistency-check distinction](storage-repair.md). The two
+earlier GX test jobs had been deliberately removed by the owner before the reset;
+the remaining job listing and file identity stayed unchanged across boot.
+No byte-for-byte pre-reset job-content comparison was made. The code audit
+found no job deletion in the reset handler.
+
+The control/library comparison checks on-disk files, not a motion-controller
+flash readback.
 
 Do not factory-reset the development printer merely to satisfy a documentation
-checkbox. This guide records the audited behavior and the remaining acceptance.
+checkbox. A future reset test needs operator authorization and externally saved
+settings/registration/calibration/keys, with UART recovery available.

@@ -12,9 +12,17 @@ STATES = {
     'backup': ('Saving rollback files', 'Copying originals to the USB drive.', 'No install writes have started.'),
     'installing': ('Installing Revival', 'Writing the local firmware overlay.', 'Do not switch off or remove USB.'),
     'verifying': ('Verifying installation', 'Checking files and storage.', 'Do not switch off or remove USB.'),
-    'complete': ('Installation complete', 'Files verified; storage unmounted.', 'Review the USB report, then reboot.'),
-    'failed': ('Installation stopped', 'No install writes were started.', 'Read the console for the failed check.'),
-    'failed-writes': ('Installation incomplete', 'Do not reboot yet.', 'Use the console and rollback guide.'),
+    'complete': ('Installation verified', 'Files verified; storage unmounted.', 'Finishing USB maintenance.'),
+    'failed': ('Installation stopped', 'No install writes were started.', 'Read the USB report or console.'),
+    'failed-writes': ('Installation incomplete', 'Do not reboot yet.', 'Read the USB report and restore guide.'),
+    'rolling-back': ('Restoring previous files', 'Restoring this printer\u2019s own backup.', 'Do not switch off or remove USB.'),
+    'usb-enter': ('Entering maintenance', 'Preparing the RAM environment.', 'No boot settings will be saved.'),
+    'usb-backup': ('Backing up storage', 'Saving this printer to USB.', 'This can take an hour or more.'),
+    'usb-stopped': ('Maintenance stopped', 'Keep power and USB connected.', 'Review the USB maintenance report.'),
+    'usb-check-done': ('Checks passed', 'Offline storage checks passed.', 'No firmware files were installed.'),
+    'usb-backup-done': ('Backup complete', 'Storage images saved to USB.', 'Verify their checksums on the PC.'),
+    'usb-install-done': ('Installation complete', 'Revival files verified.', 'Review the USB report before use.'),
+    'usb-rollback-done': ('Rollback complete', 'Previous managed files restored.', 'Owner keys kept; cloud stays off.'),
 }
 
 
@@ -41,8 +49,8 @@ def render(state):
     text(24, 180, hint, 21, '#9bb0be')
     draw.line((24, 236, 456, 236), fill='#2a3e4c')
     footer = 'Keep power and USB connected.'
-    if state == 'complete':
-        footer = 'Reboot from the recovery console.'
+    if state.endswith('-done'):
+        footer = 'Remove USB, then power-cycle.'
     text(24, 259, footer, 21, '#f5f8fa', True)
     # The panel's scan order is portrait, rotated clockwise from logical output.
     native = image.transpose(Image.Transpose.ROTATE_270)

@@ -43,6 +43,18 @@ This does not recover an invalid stock ELF, missing guard library, damaged
 filesystem or bad kernel. Do not kill/relaunch the GUI during a print. A plain
 vendor executable launched outside the Revival wrapper loses these guards.
 
+## USB-only managed-file rollback
+
+New USB installs save inventories, checksums and a device binding under
+`revival/reports/usb-*/install/`. The explicit ROLLBACK request in
+[USB-only maintenance](usb-maintenance.md) restores the prior managed state,
+preserves owner keys and keeps cloud switches OFF. It refuses edited managed
+files and another printer’s archive. The physical upgrade/rollback round trip and
+following normal boots passed on the development printer. See [validation](validation.md).
+
+The older stock-UI rescue below is separate and requires an archive whose
+startup configuration actually selects stock.
+
 ## Offline stock-UI rescue
 
 The installer writes a private archive to the USB under
@@ -118,7 +130,8 @@ manifest on the PC first. Restore its saved files and remove only files proven
 to have been introduced by that installation. Archives contain existing paths
 only: extracting one over a newer installation leaves newly added files behind.
 Restore startup selection last; keep cloud switches OFF unless cloud restoration
-is explicitly intended. This whole-overlay rollback remains a release test gate.
+is explicitly intended. The USB managed-file procedure above automates this scope;
+its completed round trip restored the development printer's previous Revival setup.
 
 ## Restore an unbootable kernel
 

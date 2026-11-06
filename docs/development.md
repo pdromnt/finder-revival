@@ -92,7 +92,7 @@ No GitHub push or release publication is performed merely by building locally.
 
 ## Release handoff
 
-After recording the installation, rollback, physical print and Factory Reset
+After recording the installation, rollback and Factory Reset
 results in [validation](validation.md), generate a final versioned package from
 the reviewed source. Prepare these files for manual upload to GitHub Releases:
 

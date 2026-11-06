@@ -47,12 +47,8 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 [ "$(id -u)" = 0 ]
-grep -q ' / tmpfs ' /proc/mounts
-! grep -q 'mmcblk0p[23]\|/dev/root ' /proc/mounts
-[ "$(cat /sys/block/mmcblk0/size)" = 15269888 ]
-case "$(uname -m)" in armv5*) ;; *) echo 'Unsupported CPU'; exit 1 ;; esac
-[ "$(uname -r)" = 3.10.32+ ]
-if [ -e /proc/net/if_inet6 ] || [ -d /proc/sys/net/ipv6 ]; then echo 'Unsupported IPv6 kernel'; exit 1; fi
+. "$BASE/overlay-common.sh"
+offline_profile
 for tool in e2fsck tar sha256sum mount umount awk sed od tr; do command -v "$tool" >/dev/null; done
 status checking
 if [ -s "$BASE/authorized_keys" ]; then
@@ -70,25 +66,25 @@ tar -xf "$BASE/payload.tar" -C "$STAGE/payload"
 ROOT="$STAGE/root"
 mount -t ext4 -o ro /dev/mmcblk0p2 "$ROOT"
 MOUNTED=1
-[ "$(sha256sum "$ROOT/PROGRAM/software/2.8.4/finder-plus-arm" | awk '{print $1}')" = aa73d2932cd13aff93124d82c2ac304b41adc7d52fd206cc23b874cdbe065375 ] || {
-    echo 'Unsupported stock executable: requires Finder 2.8.4.366 F2.12 20210823 and the documented SHA256.' >&2
-    exit 1
-}
-KERNEL=$(sha256sum "$ROOT/PROGRAM/kernel/1.0.366/uImage-finder-367-20190814" | awk '{print $1}')
-case "$KERNEL" in
- ffcf3a7a15d06d42d14b104b2e63ed824888e89bbf21c4a5c330b911c5d35e87|651ded763ab91ea7b8584ba8d7f9cfb80b53a1c57835d8c62b855b893efdbdb0) ;;
- *) echo 'Unsupported cached kernel'; exit 1 ;;
-esac
+verify_stock
+validate_paths "$BASE/managed-paths.txt"
+validate_paths "$BASE/payload-paths.txt"
 [ "$(df -k "$ROOT" | awk 'END {print $4}')" -gt 8192 ]
 status backup
-REPORT="$BASE/reports/install-$(date +%Y%m%d-%H%M%S)-$$"
+if [ -n "${REVIVAL_RUN_ID:-}" ]; then
+    case "$REVIVAL_RUN_ID" in usb-*) ;; *) exit 1 ;; esac
+    case "$REVIVAL_RUN_ID" in *[!a-z0-9-]*) exit 1 ;; esac
+    REPORT="$BASE/reports/$REVIVAL_RUN_ID/install"
+else
+    REPORT="$BASE/reports/install-$(date +%Y%m%d-%H%M%S)-$$"
+fi
+[ ! -e "$REPORT" ]
 mkdir -p "$REPORT"
-EXISTING="$STAGE/existing.txt"
-: > "$EXISTING"
-for path in PROGRAM/ffstartup.cfg PROGRAM/revival-ui PROGRAM/revival-web PROGRAM/revival-logging PROGRAM/revival-network PROGRAM/software/2.8.4/finder-revival.sh etc/revival etc/revival-web etc/init.d/S02revival-logs etc/init.d/S03revival-local-only etc/init.d/S50revival-sshd etc/init.d/S51revival-web etc/init.d/S52revival-camera opt/flashforge/cloud-ff opt/flashforge/cloud-mymini; do
-    [ ! -e "$ROOT/$path" ] || printf '%s\n' "$path" >> "$EXISTING"
-done
-tar -cf "$REPORT/rollback-private.tar" -C "$ROOT" -T "$EXISTING"
+cp "$BASE/managed-paths.txt" "$REPORT/managed-paths.txt"
+cp "$BASE/payload-paths.txt" "$REPORT/payload-paths.txt"
+record_files "$REPORT/managed-paths.txt" "$REPORT/before"
+sha256sum "$ROOT/opt/flashforge/serial-number" | awk '{print $1}' > "$REPORT/device-id.sha256"
+tar -cf "$REPORT/rollback-private.tar" -C "$ROOT" -T "$REPORT/before.paths"
 sha256sum "$REPORT/rollback-private.tar" > "$REPORT/rollback.sha256"
 cp "$ROOT/PROGRAM/ffstartup.cfg" "$STAGE/ffstartup.cfg"
 grep -q '^AppName = ./software/%VERSION%/finder-\(plus-arm\|revival.sh\)$' "$STAGE/ffstartup.cfg"
@@ -97,11 +93,14 @@ sed -e 's|^AppName = ./software/%VERSION%/finder-plus-arm$|AppName = ./software/
     -e 's|^LogLevel = 0$|LogLevel = 2|' -e 's|^LogConsole = true$|LogConsole = false|' \
     "$STAGE/ffstartup.cfg" > "$STAGE/ffstartup.cfg.new"
 status installing
-# Mark this before attempting remount; any later failure needs recovery review.
 WRITES_STARTED=1
 mount -o remount,rw "$ROOT"
-tar -cf - -C "$STAGE/payload" . | tar -xf - -C "$ROOT"
-# Only the target's cloud flags change; registration/account/calibration stay.
+while IFS= read -r path; do
+    safe_path "$path"
+    [ -f "$STAGE/payload/$path" ] && [ ! -L "$STAGE/payload/$path" ]
+    mkdir -p "$ROOT/$(dirname "$path")"
+    cp -p "$STAGE/payload/$path" "$ROOT/$path"
+done < "$BASE/payload-paths.txt"
 for name in cloud-ff cloud-mymini; do
     printf 'OFF\r\n' > "$ROOT/opt/flashforge/$name.new"
     chmod 644 "$ROOT/opt/flashforge/$name.new"
@@ -123,13 +122,15 @@ if [ -s "$BASE/authorized_keys" ]; then
     [ -e "$ROOT/etc/revival/sshd_config" ] || cp "$BASE/sshd_config" "$ROOT/etc/revival/sshd_config"
     chmod 600 "$ROOT/etc/revival/authorized_keys" "$ROOT/etc/revival/sshd_config"
 fi
-cp "$STAGE/ffstartup.cfg.new" "$ROOT/PROGRAM/ffstartup.cfg.new"
-chmod 644 "$ROOT/PROGRAM/ffstartup.cfg.new"
-mv "$ROOT/PROGRAM/ffstartup.cfg.new" "$ROOT/PROGRAM/ffstartup.cfg"
 status verifying
 for directory in revival-ui revival-web revival-logging revival-network; do
     (cd "$ROOT/PROGRAM/$directory" && sha256sum -c SHA256SUMS)
 done
+cp "$STAGE/ffstartup.cfg.new" "$ROOT/PROGRAM/ffstartup.cfg.new"
+chmod 644 "$ROOT/PROGRAM/ffstartup.cfg.new"
+mv "$ROOT/PROGRAM/ffstartup.cfg.new" "$ROOT/PROGRAM/ffstartup.cfg"
+record_files "$REPORT/managed-paths.txt" "$REPORT/after"
+(cd "$REPORT" && sha256sum rollback-private.tar before.paths before.sha256 after.paths after.sha256 managed-paths.txt payload-paths.txt device-id.sha256 > ROLLBACK-SHA256SUMS)
 finish
 e2fsck -fn /dev/mmcblk0p2
 printf 'Overlay installed; root unmounted and checked. No kernel was flashed.\n' > "$REPORT/COMPLETE.txt"

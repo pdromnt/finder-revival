@@ -9,6 +9,13 @@ kernel recovery was demonstrated; a whole-eMMC restore has not been qualified.
 Keep an independently accessible copy of the original kernel and startup
 configuration, not only those files buried inside a multi-gigabyte image.
 
+## USB-only backup
+
+The [BACKUP request](usb-maintenance.md) acquires storage after root/data are
+unmounted, without SSH or UART. Images appear under `revival/FFINDER-BACKUP-*`;
+verify all hashes and lengths on the PC. This new entry path needs hardware
+qualification; it uses the existing acquisition reader.
+
 ## Full acquisition
 
 **Use a USB drive of at least 16 GB, formatted as FAT32. FAT32 is mandatory;

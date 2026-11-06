@@ -7,8 +7,9 @@
 Prospective users on a different build must establish the matching stock
 baseline first; these files do not upgrade arbitrary stock versions to it.
 
-The components run on one verified Finder. The packaged community installer is
-experimental and has not yet passed an independent end-to-end hardware install.
+The packaged USB-only CHECK, upgrade/reinstallation and rollback passed on the
+development Finder, including subsequent normal power cycles.
+The community installer remains experimental.
 Do not call a generated ZIP “safe to flash” based on build/fixture checks alone.
 
 Release distribution is a small overlay, **not** an 8 GB image. It reuses the
@@ -31,7 +32,7 @@ This hook is not evidence that another Finder revision supports it. The
 but that does not prove its format applies to this Linux board or establishes
 a compatible vendor update package. See [references](reverse-engineering.md).
 
-The generated USB starter uses the narrow `0007` marker, starts temporary SSH
+Without a maintenance request, the USB starter uses the narrow `0007` marker and starts temporary SSH
 in RAM only when the owner supplies a public key, and writes reports to the USB.
 It does not automatically install a kernel, repair filesystems or reset passwords.
 Removing the stick after a completed bootstrap is different from interrupting
@@ -46,6 +47,11 @@ revival/
   payload.tar
   SHA256SUMS
   install-overlay.sh
+  rollback-overlay.sh
+  usb-start.sh
+  usb-pid1.sh
+  usb-job.sh
+  init-guard
   status-screen.sh
   status-screens/       # generated native framebuffer frames
   maintenance-enter.sh
@@ -53,7 +59,13 @@ revival/
   authorized_keys       # OWNER adds this; never in generic release
 ```
 
-## Recommended first-install path
+## USB-only first install
+
+Follow [USB-only maintenance](usb-maintenance.md), beginning with CHECK. An
+explicit REQUEST.txt selects CHECK, BACKUP, INSTALL or ROLLBACK. SSH and UART
+are not normal prerequisites.
+
+## Manual/console alternative
 
 1. Confirm stock **2.8.4.366 F2.12 20210823**, the [exact profile/hash](compatibility.md),
    [backup](backup.md) and UART path.
@@ -69,8 +81,6 @@ revival/
    report. Do not reboot while file writes are in progress.
 7. Check both unmounted filesystems again. Boot normally without the stick;
    verify identity, UI, dashboard, camera and network policy.
-8. Perform supervised physical printing separately; an idle READY reply is not
-   validation of heater, motion or print behavior.
 
 See the installer's `--help`/usage before use. Do not bypass its checks or feed
 the old ignored `tools/install_*.py` scripts to an agent: those scripts are
@@ -80,20 +90,23 @@ historical operations tied to one development session.
 
 The offline installer shows **Checking printer → Checking USB files → Saving
 rollback files → Installing Revival → Verifying installation → Installation
-complete** on the supported framebuffer. These are actual stages, not a timed
+verified** on the supported framebuffer. The USB job then finishes and unmounts
+USB before showing **Installation complete / Remove USB, then power-cycle**.
+These are actual stages, not a timed
 progress percentage; filesystem checks can take several minutes. Keep power
 and USB connected. The screens have no touch controls and do not reboot for you.
 
 **Installation stopped** means no install writes were started; inspect the
 console for the failed prerequisite. **Installation incomplete / Do not reboot
 yet** means writes may have started. Follow the console and [restore runbook](restore.md)
-before attempting normal boot. Check `revival/reports/install-*/FAILED.txt` if
-created. Only a successful final unmount/offline check and flushed completion
-report lead to the complete screen; review `COMPLETE.txt` before rebooting.
+before attempting normal boot. Check `revival/reports/usb-*/install/FAILED.txt`
+and the run's `operation.log`; the manual/console path uses `reports/install-*`.
+Only successful final unmounts/offline checks and flushed completion reports lead
+to the removal screen. Review `install/COMPLETE.txt` and the run's `FINISHED.txt`.
 
 If the framebuffer or screen files are unavailable/incompatible, the console
-remains authoritative. These screens are part of the explicit offline install,
-not the RAM-only USB bootstrap. Their PC render and shell fixture checks do not
+remains authoritative. These screens accompany explicit maintenance requests; ordinary diagnostic
+bootstrap does not claim an installation. Their PC render and shell fixture checks do not
 replace the still-pending integrated hardware installer test.
 
 ## Updates

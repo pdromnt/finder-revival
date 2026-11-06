@@ -2,7 +2,7 @@
 # Source this helper. Display is best effort; it never decides install success.
 # Frames stay on USB and stream directly to the supported 320x480 RGB565 panel.
 revival_screen() (
-    case "${2:-}" in checking|package|backup|installing|verifying|complete|failed|failed-writes) ;;
+    case "${2:-}" in checking|package|backup|installing|verifying|complete|failed|failed-writes|rolling-back|usb-enter|usb-backup|usb-stopped|usb-check-done|usb-backup-done|usb-install-done|usb-rollback-done) ;;
         *) exit 0 ;;
     esac
     frame="$1/status-screens/$2.raw"

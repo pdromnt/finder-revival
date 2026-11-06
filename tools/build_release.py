@@ -17,6 +17,10 @@ PAYLOAD_FILES={
     'PROGRAM/software/2.8.4/finder-revival.sh','etc/init.d/S02revival-logs','etc/init.d/S03revival-local-only',
     'etc/init.d/S50revival-sshd','etc/init.d/S51revival-web','etc/init.d/S52revival-camera'
 }
+MANAGED_FILES=PAYLOAD_FILES | {
+    'PROGRAM/ffstartup.cfg','etc/revival/authorized_keys','etc/revival/sshd_config',
+    'etc/revival-web/key','opt/flashforge/cloud-ff','opt/flashforge/cloud-mymini'
+}
 def digest(data):return hashlib.sha256(data).hexdigest()
 def normalized(path):
     p=PurePosixPath(path)
@@ -40,6 +44,12 @@ def main():
         for tool in ['build_ui_adapter.py','build_logging_patch.py','build_web_service.py']:
             subprocess.run([sys.executable,str(ROOT/'tools'/tool)],check=True)
     output=ROOT/'dist'/('finder-revival-'+args.version);output.mkdir(parents=True,exist_ok=True)
+    initbuild=ROOT/'installer/build';initbuild.mkdir(exist_ok=True)
+    subprocess.run(['docker','run','--rm','--entrypoint','arm-linux-gnueabi-gcc','--mount',f'type=bind,source={ROOT},target=/work','ffinder-web-tools:local',
+        '-std=gnu11','-Os','-Wall','-Wextra','-Werror','-marm','-march=armv5te','-mfloat-abi=soft',
+        '-nostdlib','-static','-ffreestanding','-fno-builtin','-fno-stack-protector','-fno-pie','-no-pie',
+        '-fomit-frame-pointer','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-Wl,--build-id=none',
+        '-o','installer/build/init-guard','installer/init-guard.c'],check=True)
     # A binary package is never generated without its matching source/relink companion.
     sys.path.insert(0,str(ROOT/'tools'))
     from build_install_screens import build as build_install_screens
@@ -90,8 +100,12 @@ def main():
     usb={'0007':b'','flashforge_init.sh':source('installer/flashforge_init.sh').replace(b'\r\n',b'\n'),'revival/payload.tar':payload,
          'revival/manifest.json':(json.dumps(manifest,indent=2)+'\n').encode(),'README.md':source('README.md'),'LICENSE':source('LICENSE'),'THIRD_PARTY.md':source('THIRD_PARTY.md'),
          'profiles/finder-plus-2.8.4.json':source('profiles/finder-plus-2.8.4.json')}
-    for name in ['install-overlay.sh','status-screen.sh','maintenance-enter.sh','maintenance-ram.sh','backup-emmc.sh','sshd_config']:
+    for name in ['install-overlay.sh','rollback-overlay.sh','overlay-common.sh','status-screen.sh','usb-start.sh','usb-pid1.sh','usb-job.sh','maintenance-enter.sh','maintenance-ram.sh','backup-emmc.sh','sshd_config']:
         usb['revival/'+name]=source('installer/'+name).replace(b'\r\n',b'\n')
+    usb['revival/init-guard']=source('installer/build/init-guard')
+    usb['revival/managed-paths.txt']=(''.join(p+'\n' for p in sorted(MANAGED_FILES))).encode()
+    usb['revival/payload-paths.txt']=(''.join(p+'\n' for p in sorted(PAYLOAD_FILES))).encode()
+    usb['revival/REQUEST.example.txt']=b'CHECK\n'
     for name,data in build_install_screens(ROOT/'installer/build/status-screens').items():
         usb['revival/status-screens/'+name]=data
     for doc in sorted((ROOT/'docs').glob('*.md')):usb['docs/'+doc.name]=doc.read_bytes()

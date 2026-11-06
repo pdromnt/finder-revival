@@ -1,5 +1,5 @@
 #!/bin/sh
-# Generic starter: RAM-only owner-key SSH; never auto-flash or auto-repair.
+# Generic starter: explicit one-shot USB maintenance or RAM-only owner-key SSH.
 set -eu
 umask 077
 MEDIA=$(CDPATH= cd "$(dirname "$0")" && pwd)
@@ -8,13 +8,16 @@ awk -v p="$MEDIA" '$2==p && $3=="vfat" {ok=1} END {exit !ok}' /proc/mounts
 [ "$(id -u)" = 0 ]
 mkdir -p "$MEDIA/revival/reports"
 exec > "$MEDIA/revival/reports/bootstrap.txt" 2>&1
-echo 'Finder Revival experimental USB bootstrap. No persistent install requested.'
+echo 'Finder Revival experimental USB bootstrap.'
 uname -a
 [ "$(sha256sum /PROGRAM/software/2.8.4/finder-plus-arm | awk '{print $1}')" = aa73d2932cd13aff93124d82c2ac304b41adc7d52fd206cc23b874cdbe065375 ] || {
     echo 'Unsupported stock executable: requires Finder 2.8.4.366 F2.12 20210823 and the documented SHA256.' >&2
     exit 1
 }
-echo 'Full installation and any repair require the offline maintenance guide.'
+if [ -f "$MEDIA/revival/REQUEST.txt" ]; then
+    exec /bin/sh "$MEDIA/revival/usb-start.sh" "$MEDIA"
+fi
+echo 'No USB maintenance request; normal startup with optional temporary SSH.'
 KEY="$MEDIA/revival/authorized_keys"
 if [ ! -s "$KEY" ]; then
     echo 'No owner public key supplied; temporary SSH not started.'

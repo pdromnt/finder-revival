@@ -4,6 +4,7 @@
 | --- | --- |
 | [Compatibility](compatibility.md) | Identify the Linux/eMMC board, not just its marketing name |
 | [Installation](installation.md) | USB bootstrap, offline overlay and release maturity |
+| [USB-only maintenance](usb-maintenance.md) | CHECK, BACKUP, INSTALL and ROLLBACK without routine UART |
 | [Assistant-guided installation](agent-installation.md) | Safe handoff to your preferred coding assistant |
 | [Identity](identity.md) | What is preserved, generated and intentionally changed |
 | [Factory Reset](factory-reset.md) | Stock reset footprint, Revival persistence and qualification limits |

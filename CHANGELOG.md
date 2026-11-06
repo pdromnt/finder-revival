@@ -2,6 +2,14 @@
 
 ## Unreleased — experimental first source release
 
+* Add one-shot USB CHECK/BACKUP/INSTALL/ROLLBACK requests with a RAM-only init
+  handoff; routine installation need not depend on a soldered UART console.
+* USB-only CHECK and the following power cycle passed on the development unit;
+  avoid blanket init signals that disrupt its eMMC event worker. Packaged
+  upgrade/reinstallation, managed rollback and normal boots also passed,
+  preserving protected baseline bytes.
+* Factory Reset and a subsequent power cycle verified on the development unit,
+  preserving Revival, owner access and calibration with clean storage observations.
 * Lightweight offline installer touchscreen stages and distinct failure guidance,
   with guarded console fallback and USB-packaged RGB565 screens.
 * Native Qt touchscreen theme across home, local files, Tools/settings, dialogs,
