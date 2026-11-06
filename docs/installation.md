@@ -13,8 +13,9 @@ The community installer remains experimental.
 Do not call a generated ZIP “safe to flash” based on build/fixture checks alone.
 
 Release distribution is a small overlay, **not** an 8 GB image. It reuses the
-target printer's own Linux, Qt, control software and identity. The custom splash
-is optional and built locally from the target's hash-verified original kernel.
+target printer's own Linux, Qt, control software and identity. INSTALL includes
+the custom splash, prepared on USB from the target's hash-verified kernel and
+installed into both named kernel files with originals saved externally.
 
 ## USB bootstrap
 
@@ -52,6 +53,9 @@ revival/
   usb-pid1.sh
   usb-job.sh
   init-guard
+  kernel-logo          # bounded ARM converter; no vendor kernel included
+  kernel-logo.art      # Revival-owned pixels/palette
+  kernel-install.sh
   status-screen.sh
   status-screens/       # generated native framebuffer frames
   maintenance-enter.sh
@@ -74,12 +78,12 @@ are not normal prerequisites.
 3. Check storage. If damage exists, use [offline repair](storage-repair.md) first.
 4. Boot RAM maintenance with root/data unmounted. The overlay installer refuses
    a running stock root, requires clean offline checks, mounts only the target
-   root for file installation, preserves rollback externally, then unmounts it.
+   root and boot for file installation, preserves rollback externally, then unmounts them.
 5. Review the payload manifest and identity policy. Installation intentionally
    disables Flashforge/Polar cloud switches and installs local-only controls.
 6. Install the overlay using its explicit apply action. Review its external
    report. Do not reboot while file writes are in progress.
-7. Check both unmounted filesystems again. Boot normally without the stick;
+7. Check unmounted boot/root/data again. Boot normally without the stick;
    verify identity, UI, dashboard, camera and network policy.
 
 See the installer's `--help`/usage before use. Do not bypass its checks or feed
@@ -133,6 +137,6 @@ to select the stock executable; disable Revival init scripts and restore its
 externally saved files/configuration. Restore original cloud switches only if
 you explicitly want cloud operation again. Preserve identity throughout.
 
-Kernel rollback, when needed, must restore both active `/uImage` on the FAT boot
-partition and the matching cached kernel under `/PROGRAM/kernel`. RAM-test it
-first. [UART recovery](recovery.md) covers the known baseline.
+Packaged rollback restores both saved kernel copies as well as the managed
+overlay files. If Linux cannot reach the USB hook, [UART recovery](recovery.md)
+covers RAM boot and restoration of both copies on the known baseline.

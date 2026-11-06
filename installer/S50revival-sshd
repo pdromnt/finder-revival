@@ -10,8 +10,10 @@ running() {
 }
 case "${1:-start}" in
  start)
-    [ -s /etc/revival/authorized_keys ] || exit 0
-    [ -r "$CONFIG" ] || exit 1
+    [ -r "$CONFIG" ] || exit 0
+    if [ ! -s /etc/revival/authorized_keys ]; then
+        grep -Eq '^PasswordAuthentication[[:space:]]+yes[[:space:]]*$' "$CONFIG" || exit 0
+    fi
     running && exit 0
     if grep -q '^HostKey /etc/revival/ssh_host_ed25519_key$' "$CONFIG" &&
        [ ! -e /etc/revival/ssh_host_ed25519_key ]; then

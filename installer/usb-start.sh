@@ -45,6 +45,7 @@ trap 'exit 143' TERM
 [ "$(sha256sum /etc/inittab | awk '{print $1}')" = 5c0ae0ca9039f2426406b644bfe3841f0ca9563b3d2df570327cbd82dda91cc4 ]
 [ "$(sha256sum /etc/init.d/rcS | awk '{print $1}')" = 5101ec596402f44354c3679ec9a7c2cf7e42e5644d7d097e19a4f5d361562c29 ]
 [ "$(sha256sum /opt/auto_run.sh | awk '{print $1}')" = 9452b9739702bdf52b55e9aa3e031d9f3089d789b8e430d0cfce2186c06e862e ]
+[ "$(sha256sum /sbin/fsck.fat | awk '{print $1}')" = 9b1e2c65173af2f7006b4d9ab0d0d3e354d7d6ff28fb3905a7fd6bb675482602 ]
 [ "$(sha256sum /PROGRAM/software/2.8.4/finder-plus-arm | awk '{print $1}')" = aa73d2932cd13aff93124d82c2ac304b41adc7d52fd206cc23b874cdbe065375 ]
 [ "$(cat /sys/block/mmcblk0/size)" = 15269888 ]
 [ "$(uname -r)" = 3.10.32+ ]
@@ -85,8 +86,8 @@ printf '%s\n' "$mode" > "$REPORT/mode.txt"
 revival_screen "$BASE" usb-enter
 mount -t tmpfs -o size=16m,mode=0755 tmpfs "$RAM"
 RAM_MOUNTED=1
-mkdir -p "$RAM/bin" "$RAM/lib" "$RAM/usr/lib" "$RAM/usr/bin" "$RAM/usr/sbin" "$RAM/etc" "$RAM/dev" "$RAM/proc" "$RAM/sys" "$RAM/usb" "$RAM/oldroot" "$RAM/run" "$RAM/tmp"
-for binary in /bin/busybox /usr/sbin/e2fsck /usr/sbin/e2image /usr/bin/ssh-keygen; do
+mkdir -p "$RAM/bin" "$RAM/sbin" "$RAM/lib" "$RAM/usr/lib" "$RAM/usr/bin" "$RAM/usr/sbin" "$RAM/etc" "$RAM/dev" "$RAM/proc" "$RAM/sys" "$RAM/usb" "$RAM/oldroot" "$RAM/run" "$RAM/tmp"
+for binary in /bin/busybox /sbin/fsck.fat /usr/sbin/e2fsck /usr/sbin/e2image /usr/bin/ssh-keygen; do
     cp -L "$binary" "$RAM$binary"
     /lib/ld-linux.so.3 --list "$binary" | awk '{for(i=1;i<=NF;i++) if($i ~ /^\//) print $i}' > "$RAM/dependencies"
     while read -r dependency; do

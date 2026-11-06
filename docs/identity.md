@@ -13,14 +13,22 @@ accounts, keys, settings and potentially old filesystem defects.
 | Cloud account/PIN/registration credentials | Preserve; never publish or clear for deprecation |
 | Flashforge Cloud / Polar switch files | Save externally, explicitly set to `OFF` |
 | Dashboard key | Preserve on upgrade; generate fresh entropy on first install |
-| SSH authorization | Owner-supplied public key; no project-wide private key |
+| SSH authorization | First setup uses documented root password or an owner public key; preserve existing configuration on upgrades |
+| Root password | Initialize `flashforge_revival` only for first password-based SSH setup; retain later owner changes and save the previous root record externally |
 | SSH host identity | Preserve existing Revival setup; generate a unique key for a new install |
 | UI/dashboard/startup | Replace only named Revival files; save rollback externally |
-| Splash | Optional local patch to the target's hash-verified kernel |
+| Splash | Patch the target's hash-verified kernel; save both originals externally and verify both installed copies |
 
 No default `/opt/flashforge`, `/etc`, `/data` or `/PROGRAM` tree from somebody
 else's dump belongs in a release. The deliberate vendor configuration changes
-are one launcher field in `ffstartup.cfg` and two cloud switch files.
+are one launcher field in `ffstartup.cfg` and two cloud switch files. First-time
+password-based SSH setup also initializes the root password; supplying an owner
+public key selects key-only setup without changing that password.
+
+The prior root record is saved privately as `install/ssh-root-before.private`
+when password setup is initialized. The full account database is never included
+in a generic release. Managed-file rollback retains the current root password,
+including later owner changes, just as it retains owner keys.
 
 On the baseline, `/opt/flashforge/cloud-ff` and `cloud-mymini` store plain-text
 `OFF\r\n`. Account/registration files are separate and remain untouched.

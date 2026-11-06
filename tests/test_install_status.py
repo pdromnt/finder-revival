@@ -43,6 +43,7 @@ class ShellStatus(unittest.TestCase):
                 + """
 revival_screen() { echo "SCREEN:$2"; }
 sync() { :; }
+kernel_close() { :; }
 umount() { echo "UNMOUNT"; return """
                 + ("1" if cleanup_fails else "0")
                 + """; }

@@ -48,9 +48,14 @@ vendor executable launched outside the Revival wrapper loses these guards.
 New USB installs save inventories, checksums and a device binding under
 `revival/reports/usb-*/install/`. The explicit ROLLBACK request in
 [USB-only maintenance](usb-maintenance.md) restores the prior managed state,
-preserves owner keys and keeps cloud switches OFF. It refuses edited managed
+preserves owner keys and the current root password, and keeps cloud switches OFF. It refuses edited managed
 files and another printer’s archive. The physical upgrade/rollback round trip and
 following normal boots passed on the development printer. See [validation](validation.md).
+
+Current installation reports also contain `kernel-boot-before.img` and
+`kernel-cache-before.img`; rollback verifies and restores both named kernel files.
+Keep the entire report, including its checksum inventories, together. The
+`rollback-private.tar` alone contains overlay files, not the kernel backups.
 
 The older stock-UI rescue below is separate and requires an archive whose
 startup configuration actually selects stock.

@@ -13,7 +13,10 @@ small payload size does not remove the need for backup/rollback space. See
 Without a one-shot request it does not install anything. Explicit CHECK, BACKUP,
 INSTALL and ROLLBACK requests use the new RAM-only BusyBox init handoff. See
 [USB-only maintenance](../docs/usb-maintenance.md); the generic ZIP is not armed. The owner adds their own ordinary
-public key as `revival/authorized_keys`; generic packages contain no keys.
+public key as `revival/authorized_keys` for key-only setup. Without a key or
+existing SSH configuration, first SSH setup initializes root / `flashforge_revival`,
+port 2222. Existing owner credentials/configuration are preserved. Generic packages
+contain no private keys; `SSH-ACCESS.txt` records the chosen setup in the install report.
 
 `maintenance-enter.sh` is executed as PID 1 from a one-shot `init=/bin/sh` boot.
 It copies the target's own maintenance binaries/dependencies into capped RAM,
@@ -24,7 +27,16 @@ is automatic. The small `sparse_stream.c` is read-only source-side transport.
 unmounted and clean offline checks. It verifies the stock ELF/geometry, saves
 the target's own originals externally, installs named Revival files, turns off
 the two cloud switches, preserves/generates per-target keys, changes the launcher
-field, then unmounts/checks root. It does not flash a kernel or motion controller.
+field, and installs the boot splash into both verified kernel files. It saves
+both originals on USB and checks unmounted boot/root/data before completion.
+It does not flash the motion controller or rewrite the bootloader/partition table.
+
+`kernel-logo` is a freestanding ARMv5 converter built from original code and
+unchanged zlib 1.3.1 sources. A fixed 512 KiB allocation arena and streamed USB
+scratch files keep memory bounded. Input, artwork and output hashes are pinned;
+the package contains project artwork, not a vendor kernel. `kernel-install.sh`
+stages both files, verifies them, commits cached copy first and boot image last,
+and implements matching two-file rollback using that installation's USB report.
 
 During the explicit offline install, static touchscreen screens show checking,
 package verification, external rollback backup, installation, verification and

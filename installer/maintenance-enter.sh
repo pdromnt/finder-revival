@@ -10,8 +10,8 @@ USB=$(awk -v p="$SOURCE" '$3=="vfat" && (p==$2 || index(p,$2 "/")==1) {print $2;
 grep -q '^/dev/root / ext4 ro,' /proc/mounts
 mount -t tmpfs -o size=16m,mode=0755 tmpfs /mnt
 RAM=/mnt
-mkdir -p "$RAM/bin" "$RAM/lib" "$RAM/usr/lib" "$RAM/usr/bin" "$RAM/usr/sbin" "$RAM/etc" "$RAM/dev" "$RAM/proc" "$RAM/sys" "$RAM/usb" "$RAM/oldroot" "$RAM/run" "$RAM/tmp"
-for binary in /bin/busybox /usr/sbin/e2fsck /usr/sbin/e2image /usr/bin/ssh-keygen; do
+mkdir -p "$RAM/bin" "$RAM/sbin" "$RAM/lib" "$RAM/usr/lib" "$RAM/usr/bin" "$RAM/usr/sbin" "$RAM/etc" "$RAM/dev" "$RAM/proc" "$RAM/sys" "$RAM/usb" "$RAM/oldroot" "$RAM/run" "$RAM/tmp"
+for binary in /bin/busybox /sbin/fsck.fat /usr/sbin/e2fsck /usr/sbin/e2image /usr/bin/ssh-keygen; do
     cp -L "$binary" "$RAM$binary"
     /lib/ld-linux.so.3 --list "$binary" | awk '{for(i=1;i<=NF;i++) if($i ~ /^\//) print $i}' | while read -r dependency; do
         mkdir -p "$RAM$(dirname "$dependency")"

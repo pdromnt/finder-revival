@@ -1,7 +1,7 @@
 """Build an identity-free experimental USB starter + offline Revival overlay.
 
 No printer connection, firmware acquisition, stock binary or private key input.
-The optional stock-kernel patch is a separate local-only tool.
+The splash is converted from the target's own kernel during offline installation.
 """
 
 import argparse
@@ -103,6 +103,7 @@ def main():
             subprocess.run([sys.executable, str(ROOT / "tools" / tool)], check=True)
     output = ROOT / "dist" / ("finder-revival-" + args.version)
     output.mkdir(parents=True, exist_ok=True)
+    subprocess.run([sys.executable, str(ROOT / "tools/build_installer.py")], check=True)
     initbuild = ROOT / "installer/build"
     initbuild.mkdir(exist_ok=True)
     subprocess.run(
@@ -250,6 +251,8 @@ def main():
         "profile": "finder-plus-2.8.4",
         "identity": "preserve target; no owner data in payload",
         "kernel_included": False,
+        "kernel_installation": "convert target locally; stage and verify boot/cached files",
+        "kernel_rollback": "both originals in private per-install USB report",
         "runtime_materials": runtime_materials,
         "files": {
             path: {"sha256": digest(data), "bytes": len(data), "mode": oct(mode)}
@@ -264,6 +267,8 @@ def main():
             "and a 16 GB minimum FAT32 USB drive. Exact binary guards remain mandatory.\n\n"
             "Start with CHECK, then verify your own backup before INSTALL.\n"
             "This package contains no armed request, owner key or vendor kernel.\n"
+            "INSTALL includes the boot splash, touchscreen, SSH and dashboard.\n"
+            "First SSH setup: root / flashforge_revival, port 2222; change the password.\n"
             "Keep the runtime-source archive on the PC.\n\n"
             "[USB operations](docs/usb-maintenance.md) | "
             "[Backup](docs/backup.md) | [Restore](docs/restore.md) | "
@@ -290,9 +295,17 @@ def main():
         "maintenance-ram.sh",
         "backup-emmc.sh",
         "sshd_config",
+        "sshd_password_config",
+        "ssh-password.sh",
+        "default-root-password.hash",
+        "kernel-install.sh",
     ]:
         usb["revival/" + name] = source("installer/" + name).replace(b"\r\n", b"\n")
     usb["revival/init-guard"] = source("installer/build/init-guard")
+    usb["revival/kernel-logo"] = source("installer/build/kernel-logo")
+    usb["revival/kernel-logo.art"] = source("installer/build/kernel-logo.art")
+    usb["licenses/zlib/LICENSE"] = source("installer/vendor/zlib/LICENSE")
+    usb["licenses/zlib/source.json"] = source("installer/vendor/zlib/source.json")
     usb["revival/managed-paths.txt"] = ("".join(p + "\n" for p in sorted(MANAGED_FILES))).encode()
     usb["revival/payload-paths.txt"] = ("".join(p + "\n" for p in sorted(PAYLOAD_FILES))).encode()
     usb["revival/REQUEST.example.txt"] = b"CHECK\n"

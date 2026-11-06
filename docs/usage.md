@@ -4,6 +4,19 @@ Open **`http://PRINTER_IP:8081/`** on your trusted LAN. Printer information in
 the footer comes from the target's live M115 reply, including its own serial.
 No PC bridge, Node runtime or external conversion server is needed.
 
+## SSH
+
+First-time password setup uses **root / `flashforge_revival`**, port **2222**:
+
+```sh
+ssh -p 2222 root@PRINTER_IP
+```
+
+Change the initial password with `passwd` after login. To choose key-only setup,
+place your public key at `revival/authorized_keys` before installing. Existing
+SSH configuration, owner keys and passwords are preserved during upgrades;
+the public default does not replace an existing owner's credentials.
+
 ## Files and Orca
 
 The repository includes [Finder 1 / 2 / Plus Orca presets and bed assets](../slicer/orca/README.md).

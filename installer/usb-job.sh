@@ -19,19 +19,21 @@ hold_failure() {
 trap hold_failure 0
 [ "$$" = 1 ]
 umount /oldroot
-! grep -q 'mmcblk0p[23]\|/dev/root ' /proc/mounts
+! grep -q 'mmcblk0p[123]\|/dev/root ' /proc/mounts
 busybox ln -s /proc/mounts /etc/mtab
 mount -t tmpfs -o size=4m,mode=0700 tmpfs /run
 exec > "$REPORT/operation.log" 2>&1
 cat /proc/mounts
 df -k / /run
 revival_screen "$BASE" checking
+. "$BASE/kernel-install.sh"
+check_boot_fat "$REPORT/boot-fat-check.txt"
 e2fsck -fn /dev/mmcblk0p2
 e2fsck -fn /dev/mmcblk0p3
 export REVIVAL_RUN_ID="$RUN"
 case "$MODE" in
     CHECK)
-        printf 'RAM handoff passed. Both ext4 targets unmounted; offline checks exit 0. No overlay changes.\n' > "$REPORT/CHECK-PASSED.txt"
+        printf 'RAM handoff passed. Boot/root/data unmounted; offline checks passed. No installation changes.\n' > "$REPORT/CHECK-PASSED.txt"
         final=usb-check-done
         ;;
     BACKUP)
@@ -53,7 +55,7 @@ case "$MODE" in
         ;;
     *) exit 1 ;;
 esac
-! grep -q 'mmcblk0p[23]\|/dev/root ' /proc/mounts
+! grep -q 'mmcblk0p[123]\|/dev/root ' /proc/mounts
 mkdir -p /tmp/status-screens
 cp "$BASE/status-screens/$final.raw" "/tmp/status-screens/$final.raw"
 [ "$(wc -c < "/tmp/status-screens/$final.raw")" = 307200 ]

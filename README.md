@@ -24,7 +24,7 @@ and bounded RAM diagnostics instead of constant vendor log writes.
 | Local dashboard | Status, file browsing, thumbnails, uploads, deletion and print prompts, served by the printer |
 | Orca integration | Direct uploads with printer-side G-code → GX conversion and supported thumbnail/metadata handling |
 | USB camera | Automatic detection of compatible UVC/MJPEG cameras, dashboard video and snapshots |
-| SSH | Persistent key-only access with the owner's authorization and per-printer host identity |
+| SSH | Password login for first setup, optional owner keys and a unique per-printer host identity |
 | Logging | Routine vendor spam suppressed; useful diagnostics kept in capped RAM |
 | Local operation | Legacy cloud/update controls retired in favor of the local dashboard |
 
@@ -89,9 +89,10 @@ After installation, the printer boots and runs without the stick or a PC bridge.
 For a source build, use [development](docs/development.md); for an assistant-led
 setup, use [assistant-guided installation](docs/agent-installation.md).
 
-The boot splash is an **optional local kernel patch**. The generic overlay
-installer does not flash a kernel. See [building the splash](docs/development.md)
-and [kernel recovery](docs/recovery.md) before changing it.
+INSTALL includes the boot splash, touchscreen, SSH and dashboard in one operation.
+The splash converter uses your own hash-verified kernel, with temporary files and
+both original kernel copies saved on USB. No vendor kernel is distributed.
+See [kernel recovery](docs/recovery.md) before installation.
 
 USB-only CHECK, packaged upgrade/reinstallation and rollback, each followed by
 a normal power cycle, passed on the development Finder.
@@ -101,6 +102,11 @@ See the [validation record](docs/validation.md) for the measured results.
 
 Open **`http://PRINTER_IP:8081/`** in a browser or Orca's Device tab. The printer
 hosts both the dashboard and conversion endpoints.
+
+For first-time SSH setup, connect as **`root`** on port **2222**, password
+**`flashforge_revival`**. Change it with `passwd` after login. Existing SSH
+configuration/passwords are preserved on upgrades. Supplying your public key
+as `revival/authorized_keys` selects key-only setup instead of initializing a password.
 
 * Configure an **OctoPrint-compatible** physical printer in Orca using that URL
   and the printer's own key from **Slicer setup**.
@@ -127,7 +133,7 @@ Keep two things outside the printer:
   original kernel and startup configuration. Independently verify hashes and
   lengths after copying to the PC.
 * **Each installation report**, including its private managed-file rollback
-  archive. This restores that installation's previous files and complements
+  archive and both original kernel images. This restores that installation's previous files and complements
   the original backup.
 
 USB carries the bulk data during backup and recovery. UART supplies console

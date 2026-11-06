@@ -7,6 +7,7 @@ used by or pictured in the project.
 | --- | --- |
 | Flashforge stock GUI, control tools, Qt/runtime and kernel | Obtained from the owner's printer; not included in source/payload archives. Keep vendor/source obligations separate when distributing any derived firmware. |
 | `stb_image.h` | Sean Barrett and contributors; retained dual MIT/public-domain notice in header. Pinned URL/hash in `web-service/vendor/stb-image-source.json`. |
+| zlib 1.3.1 | Jean-loup Gailly, Mark Adler and contributors; unchanged compression source subset in `installer/vendor/zlib/`, with upstream license, README and per-file/source archive hashes. Used by the freestanding ARM splash converter. USB packages retain its license and provenance under `licenses/zlib/`. |
 | Atkinson Hyperlegible | Braille Institute; SIL OFL 1.1 retained in `assets/fonts/atkinson/OFL.txt`. |
 | Inter web font | SIL OFL notice retained in `web-service/www/FONT-LICENSE.txt`. |
 | Flashforge logo | Identifies original hardware. Geometry referenced from Simple Icons and official visual material; see `assets/bootscreen/PROVENANCE.md`. No affiliation/trademark permission is implied. |

@@ -34,6 +34,7 @@
 !/tools/build_logging_patch.py
 !/tools/build_release.py
 !/tools/build_install_screens.py
+!/tools/build_installer.py
 !/tools/check_public_tree.py
 !/tools/patch_boot_logo.py
 !/tools/runtime/

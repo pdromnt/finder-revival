@@ -20,9 +20,11 @@ or printer. It contains matching source/relink materials, not an installer.
 The included `slicer/orca/` files are PC-side references and are not installed
 on the printer. Keep the presets/bed assets in a stable PC folder for Orca.
 
-SSH is optional. To enable it, add your own ordinary public key as
-`revival/authorized_keys`. Never copy a private key there. Existing owner keys
-are preserved. See [identity](identity.md) and [security](security.md).
+First-time SSH setup defaults to **root / `flashforge_revival`**, port **2222**;
+change it with `passwd` after login. For key-only setup instead, add your own
+ordinary public key as `revival/authorized_keys`. Never copy a private key there.
+Existing SSH configuration, passwords and owner keys are preserved on upgrades.
+See [identity](identity.md) and [security](security.md).
 
 ## 2. Run CHECK first
 
@@ -34,7 +36,7 @@ CHECK
 
 With the printer off, insert the stick and power on. Keep power and USB connected
 until **Checks passed / Remove USB, then power-cycle**. The operation checks both
-internal filesystems unmounted and installs nothing.
+ext4 filesystems and boot FAT while unmounted, and installs nothing.
 
 Remove the safely unmounted stick, switch the printer off for ten seconds and
 boot normally without it. Return the stick to the PC and inspect the newest
@@ -70,15 +72,19 @@ switch off for ten seconds and boot normally without it.
 
 Copy the whole new report directory to the PC. Require the run's `FINISHED.txt`
 and `install/COMPLETE.txt`, with no `FAILED.txt`. Preserve `install/rollback-private.tar`
-and its inventories/checksums: they belong to this printer and enable rollback.
+and its inventories/checksums, `kernel-boot-before.img` and `kernel-cache-before.img`:
+they belong to this printer and enable rollback. Keep the whole report together.
 
 **Installation incomplete / Do not reboot yet:** leave power and USB connected,
 inspect the report and follow [restore after failure](restore.md).
 
 The installer preserves identity, calibration, network settings, print files and
-existing keys. It disables legacy cloud switches while retaining account data.
-It installs a file overlay; it does not flash a kernel or motion controller.
-The optional custom boot splash is a separate local operation.
+existing keys. First-time password SSH setup intentionally initializes the root
+password and saves its prior record privately on USB. It disables legacy cloud
+switches while retaining account data.
+One INSTALL supplies the touchscreen, SSH, dashboard and boot splash. The splash
+is prepared from your own verified kernel on USB, then both named internal kernel
+files are staged, checked and replaced. The motion controller remains untouched.
 
 ## 5. Check normal operation
 

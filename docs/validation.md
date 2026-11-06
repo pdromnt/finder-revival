@@ -80,6 +80,17 @@
 
 ## Local / simulated evidence
 
+The combined rc.1 installer adds first-setup password SSH and two-file splash
+installation/rollback to the previously exercised overlay workflow. Forty local
+unit tests cover fresh/upgrade credential preservation, kernel staging/rollback,
+unknown inputs, corrupt staging and failed rename cases. The freestanding ARM
+converter also ran on the development printer in a **20 MiB-capped tmpfs**:
+the stock image converted to the exact approved, previously boot-tested splash
+hash. Its scratch files were removed and the RAM mount released; this trial did
+not write internal storage. Password hashing was verified with the printer's own
+libcrypt. These converter/account checks are separate from an end-to-end physical
+trial of the newly combined INSTALL/ROLLBACK package.
+
 BusyBox 1.24.1 was rehearsed in an isolated PID namespace: configuration reload
 acknowledgement preceded PID 1 re-exec; the temporary bind was removed and
 the original inittab remained unchanged. File fixtures exercise fresh/upgrade

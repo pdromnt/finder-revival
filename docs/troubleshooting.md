@@ -28,9 +28,10 @@ another reset to diagnose a connection problem.
 
 ## SSH is missing
 
-Check the printer's current address and port 2222. Verify your public key was
-installed, host-key identity is the expected target, and the init script ran.
-Do not disable host verification or enable a shared root password to bypass it.
+Check the printer's current address and port 2222. First-time password setup uses
+root / `flashforge_revival`; existing SSH credentials/configuration are preserved
+on upgrades. For key-only setup, verify your public key was installed. Check host
+identity and that the init script ran. Do not disable host verification to bypass it.
 USB temporary access and UART are separate recovery options.
 
 ## Camera unavailable

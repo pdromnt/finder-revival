@@ -11,6 +11,9 @@
   "stock_kernel_sha256": "ffcf3a7a15d06d42d14b104b2e63ed824888e89bbf21c4a5c330b911c5d35e87",
   "approved_splash_kernel_sha256": "651ded763ab91ea7b8584ba8d7f9cfb80b53a1c57835d8c62b855b893efdbdb0",
   "cached_kernel_path": "/PROGRAM/kernel/1.0.366/uImage-finder-367-20190814",
+  "kernel_image_bytes": 3199416,
+  "splash_art_sha256": "089cb2f0aca9843f942ef1a5ccf75d096a9a7f78e3fb1a0d100026a6acf13997",
+  "splash_compression_arena_bytes": 524288,
   "emmc_sectors": 15269888,
   "usb_handoff": {
     "busybox_version": "1.24.1",
@@ -18,6 +21,7 @@
     "inittab_sha256": "5c0ae0ca9039f2426406b644bfe3841f0ca9563b3d2df570327cbd82dda91cc4",
     "rcS_sha256": "5101ec596402f44354c3679ec9a7c2cf7e42e5644d7d097e19a4f5d361562c29",
     "auto_run_sha256": "9452b9739702bdf52b55e9aa3e031d9f3089d789b8e430d0cfce2186c06e862e",
+    "fsck_fat_sha256": "9b1e2c65173af2f7006b4d9ab0d0d3e354d7d6ff28fb3905a7fd6bb675482602",
     "ram_root_limit_bytes": 16777216,
     "operation_ram_limit_bytes": 4194304,
     "init_volatile_kill_call_addresses": [514796, 514836],

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Offline rollback of this printer's managed files; preserve keys and cloud OFF policy.
+# Offline rollback; preserve SSH credentials and cloud OFF policy.
 set -eu
 umask 077
 [ "${1:-}" = --apply ] && [ -n "${2:-}" ]
@@ -9,6 +9,7 @@ case "$TARGET" in usb-*) ;; *) exit 1 ;; esac
 case "$TARGET" in *[!a-z0-9-]*) exit 1 ;; esac
 . "$BASE/overlay-common.sh"
 . "$BASE/status-screen.sh"
+. "$BASE/kernel-install.sh"
 offline_profile
 (cd "$BASE" && sha256sum -c SHA256SUMS)
 e2fsck -fn /dev/mmcblk0p2
@@ -22,7 +23,7 @@ mkdir -p "$STAGE/root" "$STAGE/saved"
 ROOT="$STAGE/root"
 MOUNTED=0
 WRITES_STARTED=0
-finish() { cd /; sync && umount "$ROOT" && MOUNTED=0; }
+finish() { cd /; sync && kernel_close && umount "$ROOT" && MOUNTED=0; }
 failed() {
     result=$?
     trap - 0 HUP INT TERM
@@ -34,6 +35,7 @@ failed() {
     exit "$result"
 }
 trap failed 0
+trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 mount -t ext4 -o ro /dev/mmcblk0p2 "$ROOT"
@@ -62,6 +64,7 @@ mkdir "$REPORT"
 record_files "$SAVED/managed-paths.txt" "$REPORT/before-rollback"
 tar -cf "$REPORT/pre-rollback-private.tar" -C "$ROOT" -T "$REPORT/before-rollback.paths"
 sha256sum "$REPORT/pre-rollback-private.tar" > "$REPORT/pre-rollback.sha256"
+kernel_prepare_rollback
 revival_screen "$BASE" rolling-back
 WRITES_STARTED=1
 mount -o remount,rw "$ROOT"
@@ -77,6 +80,7 @@ while IFS= read -r path; do
     fi
 done < "$SAVED/managed-paths.txt"
 for name in cloud-ff cloud-mymini; do printf 'OFF\r\n' > "$ROOT/opt/flashforge/$name"; done
+if [ "$KERNEL_ROLLBACK" = 1 ]; then kernel_commit; fi
 # Restore the previous startup selection last. Newly generated owner keys are retained.
 cp -p "$STAGE/saved/PROGRAM/ffstartup.cfg" "$ROOT/PROGRAM/ffstartup.cfg.rollback"
 mv "$ROOT/PROGRAM/ffstartup.cfg.rollback" "$ROOT/PROGRAM/ffstartup.cfg"
@@ -85,8 +89,9 @@ while IFS= read -r path; do
     cmp "$STAGE/saved/$path" "$ROOT/$path"
 done < "$SAVED/before.paths"
 finish
+check_boot_fat "$REPORT/boot-fat-after.txt"
 e2fsck -fn /dev/mmcblk0p2
 e2fsck -fn /dev/mmcblk0p3
-printf 'Previous managed files/startup restored. Keys retained; cloud switches OFF.\n' > "$REPORT/RESTORED.txt"
+printf 'Previous managed files/startup restored. SSH credentials retained; cloud switches OFF.\n' > "$REPORT/RESTORED.txt"
 sync
 trap - 0

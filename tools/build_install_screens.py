@@ -20,8 +20,8 @@ STATES = {
     ),
     "backup": (
         "Saving rollback files",
-        "Copying originals to the USB drive.",
-        "No install writes have started.",
+        "Saving files and preparing the splash.",
+        "This can take several minutes.",
     ),
     "installing": (
         "Installing Revival",

@@ -25,8 +25,11 @@ Packaging also downloads approximately 285 MiB of hash-pinned Debian runtime/bui
 sources into the ignored `dist/runtime-source-cache/`. Subsequent builds reuse
 verified cached files. It refuses different toolchain package identities or
 notices until their source lock/materials are explicitly reviewed and updated.
-The optional local splash tool requires your own verified kernel and outputs
-an ignored patched image; it does not flash anything.
+The package builder also builds a freestanding ARM splash converter, validates
+its unchanged zlib sources against their lock and generates approved palette/pixel
+data. INSTALL converts the target's own kernel on USB; no vendor kernel is packaged.
+The separate PC splash tool remains useful for inspection and outputs only an
+ignored patched image; it does not flash anything.
 
 ```sh
 python tools/patch_boot_logo.py --input YOUR_ORIGINAL_uImage --output dist/private/uImage-revival
@@ -35,7 +38,9 @@ python tools/patch_boot_logo.py --input YOUR_ORIGINAL_uImage --output dist/priva
 The generic patcher reproduced the exact previously RAM-tested splash image
 from the supported original during development. Its output report still defaults
 to `boot_tested: false`: each operator must validate their own artifact/target.
-The ZIP deliberately excludes this local vendor-derived kernel output.
+The ZIP deliberately excludes this local vendor-derived kernel output. The ARM
+converter must reproduce the same hash before either internal kernel file changes.
+Its 512 KiB compression arena and streamed USB scratch keep RAM use bounded.
 
 Backend tests:
 

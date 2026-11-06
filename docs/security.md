@@ -44,8 +44,11 @@ The service has same-origin/Host checks and guarded mutation identities, but no
 TLS or accounts. The stock TCP and vendor camera services are also not hardened
 public endpoints. No port forwarding, public reverse proxy or Internet exposure.
 
-SSH is key-only root access using the owner's authorization. New installations
-generate their own host key; no shared passwords/private keys are distributed.
+First-time SSH setup uses **root / `flashforge_revival`**, port **2222**. This is
+a public project default: change it with `passwd` after login. Supplying your
+own public key as `revival/authorized_keys` selects key-only setup instead.
+Existing SSH configuration, owner keys and passwords are preserved on upgrades.
+New installations generate a unique host key; no private keys are distributed.
 Keep keys and backups private. Do not bypass host-key warnings without checking
 the actual target. The old vendor kernel and userspace remain old after theming.
 

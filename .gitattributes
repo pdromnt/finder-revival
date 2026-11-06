@@ -17,3 +17,4 @@ assets/fonts/atkinson/OFL.txt -whitespace
 # Preserve upstream runtime notices exactly as supplied by Debian.
 licenses/runtime/*.txt -whitespace
 slicer/orca/CC-BY-NC-ND-4.0.txt -whitespace
+installer/vendor/zlib/* -whitespace

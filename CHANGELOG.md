@@ -2,6 +2,14 @@
 
 ## 0.1.0-rc.1 — private volunteer prerelease
 
+* First-time SSH setup supports root / `flashforge_revival` without PC key generation.
+  Owner public keys still select key-only setup; existing SSH credentials/configuration
+  and later password changes survive upgrades and managed-file rollback.
+
+* Integrate the boot splash into the same INSTALL as touchscreen, SSH and dashboard:
+  convert the target's pinned kernel on USB with bounded RAM, save both original
+  kernel copies externally, stage/readback both replacements and support matching rollback.
+
 * Add a standalone USB quickstart for CHECK, verified backup, installation and rollback.
 * Expand recovery documentation and organize the guide index by task.
 * Normalize public Python/browser source formatting and enforce lint/format checks.

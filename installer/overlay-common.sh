@@ -3,7 +3,7 @@
 offline_profile() {
     [ "$(id -u)" = 0 ] || return 1
     grep -q ' / tmpfs ' /proc/mounts || return 1
-    ! grep -q 'mmcblk0p[23]\|/dev/root ' /proc/mounts || return 1
+    ! grep -q 'mmcblk0p[123]\|/dev/root ' /proc/mounts || return 1
     [ "$(cat /sys/block/mmcblk0/size)" = 15269888 ] || return 1
     case "$(uname -m)" in armv5*) ;; *) return 1 ;; esac
     [ "$(uname -r)" = 3.10.32+ ] || return 1
