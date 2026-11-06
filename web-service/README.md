@@ -44,4 +44,3 @@ system. Never publicly expose dashboard, camera, SSH or stock control ports.
 
 Build: `python tools/build_web_service.py`. Linux integration fixtures are in
 `tests/integration.py`; [development](../docs/development.md) gives the commands.
-Physical upload-and-print acceptance remains separate from fake-printer tests.

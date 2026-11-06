@@ -1,6 +1,6 @@
 ---
-name: Finder Revival home prototype
-description: Native Qt 4/QWS visual system captured from the temporary Finder home build.
+name: Finder Revival native touchscreen
+description: Native Qt 4/QWS visual system and installed touchscreen source references.
 colors:
   primary: "#007bb5"
   secondary: "#1d2c39"
@@ -21,8 +21,9 @@ typography:
     fontFamily: "Atkinson Hyperlegible"
     fontSize: "24px"
   subtitle:
-    fontFamily: "Atkinson Hyperlegible"
-    fontSize: "13px"
+    asset: "assets/bootscreen/revival-v3-flat.png"
+    sourceRect: "112,216,256,24"
+    displaySize: "216x20"
 rounded:
   control: "12px"
 spacing:
@@ -63,7 +64,7 @@ components:
     typography: "{typography.subtitle}"
 ---
 
-# Design System: Finder Revival home prototype
+# Design System: Finder Revival native touchscreen
 
 ## Overview
 
@@ -73,15 +74,13 @@ The approved Revival identity uses a dark blue-black field, blue task emphasis,
 orange identity detail, and clear light lettering. Flat native controls give a
 small physical touchscreen an obvious task hierarchy with generous hit areas.
 
-This records the built, temporary home prototype only. Its authority is
-`ui-prototype/theme.conf`, the native adapter in
-`ui-prototype/native/revival_ui.c`, and the actual framebuffer capture
-`.impeccable/review/finder-home.png`. The selected Print dock sketch at
-`.impeccable/mocks/decision/print-dock.html` explains the chosen composition;
-native output determines the recorded values. The user tested navigation and
-reported working flows with about the same responsiveness. Independent finish
-review approved this bounded temporary home prototype without material fixes.
-That is neither a whole-printer review nor a performance-release verdict.
+The installed home is defined by [theme.conf](ui-prototype/theme.conf) and
+the [native adapter](ui-prototype/native/revival_ui.c). Subscreens and dialogs
+are defined by [flow.conf](ui-prototype/flow.conf) and
+[flow_skin.c](ui-prototype/native/flow_skin.c). The historical `ui-prototype`
+directory name is retained for stable build paths. Published hardware captures
+are in [docs/images](docs/images/README.md); installation and navigation evidence
+is recorded in [validation](docs/validation.md).
 
 **Key Characteristics:**
 
@@ -126,10 +125,11 @@ Static Regular and Bold files and their SIL Open Font License are retained at
 `assets/fonts/atkinson/`. Upstream is
 `https://github.com/google/fonts/tree/main/ofl/atkinsonhyperlegible`.
 
-The task-label and brand roles share the large size; the subtitle is smaller.
-The current stylesheets do not specify weight, tracking, or line height. Bold
-is available but is not a separately styled role in this home. Do not infer a
-web font stack or a display/body type scale from the decision sketch.
+Task labels and the brand use 24 px type; FINDER explicitly uses weight 700.
+The Revival Project subtitle reuses the approved bootscreen lettering as a
+cropped pixmap, rather than approximating it with another font. Its source
+rectangle and displayed size are recorded above. These are native Qt roles;
+the dashboard has its own browser typography.
 
 ## Layout
 
@@ -143,11 +143,11 @@ spacing tokens. Preheat is at (16,64), Tools at (246,64), and Print files at
 and the primary task are separated by the task-gap token. Everything fits in
 one view without scrolling.
 
-The brand occupies (16,0,100,30); the subtitle occupies (118,0,108,30). Existing
+The brand occupies (16,0,100,48); the subtitle occupies (102,19,216,20). Existing
 status indicators remain at the top right. The divider spans (0,47,480,1).
-These are measurements of this home composition, not a proposed layout for
-unbuilt screens. Fonts and geometry apply only to home; secondary screens
-retain their stock appearance.
+These coordinates describe the home composition. Secondary screens use their
+own geometry and shared styling from `flow.conf` and `flow_skin.c`, retaining
+their original printer actions.
 
 ## Elevation & Depth
 
@@ -187,16 +187,14 @@ no fabricated telemetry or new status semantics are introduced.
 ### Asset provenance
 
 Task pictograms and status icons remain loaded by the original Qt resource
-system. The extraction inventory is `research/ui-resources/manifest.json`,
-whose entries retain resource paths, ELF offsets, and individual SHA256 hashes.
+system. Private extraction inventories retain resource paths, ELF offsets and
+individual SHA256 hashes; vendor resource dumps are not redistributed.
 The original ELF SHA256 is
 `aa73d2932cd13aff93124d82c2ac304b41adc7d52fd206cc23b874cdbe065375`.
-There are no new shipping raster assets in this home prototype. Browser
-decision sketches and sidecar component previews are documentation aids;
-they are not a web implementation or replacement asset pipeline.
-The sidecar's synthesized tonal strips are panel-only illustrations, not
-additional colors used by the printer. Its text-only previews embed the
-licensed Regular font and omit original native resource pictograms.
+The subtitle artwork comes from the approved
+[bootscreen asset](assets/bootscreen/revival-v3-flat.png), with
+[provenance](assets/bootscreen/PROVENANCE.md). Browser sketches are design aids;
+the installed Qt output and source configurations determine the native UI.
 
 ## Do's and Don'ts
 
@@ -204,12 +202,12 @@ licensed Regular font and omit original native resource pictograms.
 
 - **Do** preserve the recorded native home tokens and physical-screen geometry.
 - **Do** keep original task handlers, stock pictograms, and status semantics.
-- **Do** retain font license and resource provenance with the prototype.
+- **Do** retain font license and resource provenance with the installed assets.
 - **Do** verify visual and navigation changes on the actual printer screen.
 
 ### Don't:
 
-- **Don't** apply this home-only styling to secondary screens without separate work.
+- **Don't** copy home geometry onto secondary screens; use their own flow rules.
 - **Don't** treat browser previews as device-runtime evidence.
 - **Don't** claim responsiveness improved: timings show stock-handler delays and a long timer, and the user reports about the same feel.
-- **Don't** describe this temporary /run prototype, with automatic rollback, as a persistent UI installation or a validated printer-wide release.
+- **Don't** equate a new preview or RAM trial with an installed, hardware-tested change.

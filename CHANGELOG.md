@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased — experimental first source release
+## 0.1.0-rc.1 — private volunteer prerelease
+
+* Add a standalone USB quickstart for CHECK, verified backup, installation and rollback.
+* Expand recovery documentation and organize the guide index by task.
+* Normalize public Python/browser source formatting and enforce lint/format checks.
+* Fix unprivileged CI fixtures without weakening production installer guards.
+* Retain build/ABI/kernel checks under optimized Python and canonicalize gzip
+  metadata so the splash tool reproduces the approved image across Python versions.
 
 * Add one-shot USB CHECK/BACKUP/INSTALL/ROLLBACK requests with a RAM-only init
   handoff; routine installation need not depend on a soldered UART console.

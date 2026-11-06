@@ -52,6 +52,25 @@ imports, wrong architecture/float ABI and unexpected stock hashes.
 
 ## Repository and publication
 
+### Source formatting
+
+Python uses Ruff 0.14.3 from `requirements-dev.txt`; browser sources use
+Prettier 3.9.10. `.editorconfig`, `pyproject.toml` and `.prettierrc.json` record
+the shared rules. Format only the tracked source set, keeping private research,
+vendor code, original slicer exports and third-party notices untouched:
+
+```sh
+python -m ruff check $(git ls-files '*.py')
+python -m ruff format $(git ls-files '*.py')
+npx --yes prettier@3.9.10 --write web-service/www/app.js web-service/www/style.css web-service/www/index.html web-service/tests/orca_headers.cjs
+```
+
+Use `ruff format --check` and Prettier's `--check` to verify formatting without
+edits. These are PC development tools;
+no formatter or JavaScript runtime is installed on the printer.
+
+### Private workspace material
+
 The local workspace also holds ignored `research/`, `backups/`, `firmware/`,
 `.sessions/`, USB working folders and historical one-printer scripts. They are
 not required public source and must remain private. Root `.gitignore` starts
@@ -68,8 +87,8 @@ database, captured camera image or fixture report containing real identity.
 ## Release gates
 
 Publish a small generic USB starter/payload and checksums, not an 8 GB raw image.
-Use development/prerelease labels until the integrated installer passes its
-hardware gates. [Validation](validation.md) lists remaining acceptance work.
+Keep experimental labels and link the actual [validation record](validation.md).
+Build output alone does not establish hardware acceptance of new changes.
 Preserve per-target identity/key/calibration bytes and external rollback.
 
 Publish **both** generated ZIPs: the small `experimental-usb.zip` and matching

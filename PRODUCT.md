@@ -24,9 +24,9 @@ preserving account/registration data. Network protection has explicit limits.
 
 480x320 logical display; 320x480 RGB565 framebuffer. Stock GUI/control share a
 process, so hooks are pinned and guarded. Do not change motion/planning implicitly.
-One physical printer was tested; community installation is experimental. Real
-printing/heating/motion and packaged-install acceptance are separate gates.
-docs/validation.md distinguishes hardware, fixtures and unresolved work.
+One physical printer was tested; community installation is experimental.
+USB-only CHECK, packaged installation and rollback passed with subsequent normal
+power cycles. docs/validation.md records the hardware and fixture evidence.
 
 ## Design
 

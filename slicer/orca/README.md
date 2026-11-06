@@ -43,7 +43,7 @@ No process preset is included. No tuning was changed or flattened for this copy.
 The supplied export already has no `bundle_structure.json`, so its presets
 import as ordinary user presets rather than a bundle-ID subfolder. Its fresh
 import was tested by the owner. Slicing/upload/GX conversion and previews were
-also tested; physical printing with the Revival setup remains pending.
+also tested.
 
 The exported bed coordinates are X **−90…51.3 mm**, Y **−70…71.3 mm**, with
 height **140 mm**. Orca's rectangular dialog represents those as size

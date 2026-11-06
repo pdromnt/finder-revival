@@ -2,6 +2,9 @@
 /*
 !/.gitignore
 !/.gitattributes
+!/.editorconfig
+!/.prettierrc.json
+!/pyproject.toml
 !/README.md
 !/LICENSE
 !/THIRD_PARTY.md

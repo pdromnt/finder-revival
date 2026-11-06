@@ -107,7 +107,7 @@ to the removal screen. Review `install/COMPLETE.txt` and the run's `FINISHED.txt
 If the framebuffer or screen files are unavailable/incompatible, the console
 remains authoritative. These screens accompany explicit maintenance requests; ordinary diagnostic
 bootstrap does not claim an installation. Their PC render and shell fixture checks do not
-replace the still-pending integrated hardware installer test.
+replace the recorded hardware installation and rollback evidence.
 
 ## Updates
 

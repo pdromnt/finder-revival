@@ -1,26 +1,43 @@
 # Documentation
 
+Start with [compatibility](compatibility.md), then [installation](installation.md)
+and the [USB workflow](usb-maintenance.md). If something has already failed,
+choose a recovery route in [restore after failure](restore.md).
+
+## Install and use
+
 | Guide | Purpose |
 | --- | --- |
-| [Compatibility](compatibility.md) | Identify the Linux/eMMC board, not just its marketing name |
-| [Installation](installation.md) | USB bootstrap, offline overlay and release maturity |
+| [USB quickstart](quickstart.md) | First CHECK, verified backup, install and rollback for a new operator |
+| [Compatibility](compatibility.md) | Supported Linux/eMMC board, stock build and binary hashes |
+| [Installation](installation.md) | Requirements, package setup and installation overview |
 | [USB-only maintenance](usb-maintenance.md) | CHECK, BACKUP, INSTALL and ROLLBACK without routine UART |
-| [Assistant-guided installation](agent-installation.md) | Safe handoff to your preferred coding assistant |
+| [Assistant-guided installation](agent-installation.md) | Hand the job to your preferred coding assistant |
+| [Usage](usage.md) | Local dashboard, Orca uploads, native previews and camera |
+| [Orca presets and bed assets](../slicer/orca/README.md) | Guider 2s prerequisite, stable asset paths and optional AllMetal PLA |
 | [Identity](identity.md) | What is preserved, generated and intentionally changed |
-| [Factory Reset](factory-reset.md) | Stock reset footprint, Revival persistence and qualification limits |
-| [Backup](backup.md) | Full dumps versus consistent filesystem snapshots |
-| [Storage repair](storage-repair.md) | Diagnose malformed logs; repair only unmounted filesystems |
-| [Recovery](recovery.md) | UART/Pico, U-Boot and kernel recovery |
-| [Restore after failure](restore.md) | Stock-UI rescue, kernel rollback and full-dump limits |
-| [Usage](usage.md) | Dashboard, Orca uploads, native previews and camera |
-| [Orca presets and bed assets](../slicer/orca/README.md) | Finder 1/2/Plus, Guider 2s prerequisite and optional AllMetal PLA |
-| [Security](security.md) | Cloud deprecation, update blocking and network limits |
+| [Security](security.md) | Cloud deprecation, update blocking and trusted-LAN limits |
+
+## Back up, troubleshoot and recover
+
+| Guide | Purpose |
+| --- | --- |
+| [Backup](backup.md) | Acquire your own storage, verify PC copies and keep original files accessible |
+| [Troubleshooting](troubleshooting.md) | USB detection, menu fallback, camera, SSH and networking |
+| [Restore after failure](restore.md) | Choose theme fallback, managed rollback, stock-UI rescue or kernel restoration |
+| [UART recovery](recovery.md) | 3.3 V UART/Pico wiring, U-Boot, original-kernel RAM boot and manual maintenance |
+| [Storage repair](storage-repair.md) | Preserve damaged state and repair only unmounted filesystems |
+| [Factory Reset](factory-reset.md) | What the stock settings reset changes and what survives |
+
+## Build and understand the project
+
+| Guide | Purpose |
+| --- | --- |
 | [Architecture](architecture.md) | Processes, hooks, storage, memory and protocol |
 | [Development](development.md) | Builds, tests, packaging and repository hygiene |
 | [Runtime licensing/materials](../licenses/runtime/README.md) | Notices, matching source archives and verified relinking |
 | [Reverse engineering](reverse-engineering.md) | Symbols, ABI traps and references |
-| [Validation](validation.md) | Hardware evidence, fixtures and open checks |
-| [Troubleshooting](troubleshooting.md) | Menu fallback, camera, SSH and boot problems |
+| [Validation](validation.md) | Recorded hardware results and fixture evidence |
 
 Historical local transcripts are deliberately unpublished: they contain device
 identities, network details, credentials, firmware and crash dumps. These guides
