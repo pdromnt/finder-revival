@@ -1,6 +1,9 @@
-# Finder Revival
+<h1 align="center">Flashforge Finder</h1>
+<h3 align="center">Revival Project</h3>
 
-[Source and issues](https://github.com/pdromnt/finder-revival)
+<p align="center">
+  <img src="assets/bootscreen/revival-v3-flat.png" alt="Finder Revival boot screen" width="480">
+</p>
 
 This project has no official Discord or subreddit. Please use
 [GitHub Issues](https://github.com/pdromnt/finder-revival/issues) for discussion
