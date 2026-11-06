@@ -314,6 +314,7 @@ def main():
         usb[path] = source(path)
     for name in ["touchscreen-home.png", "print-sources.png", "settings.png"]:
         usb["docs/images/" + name] = source("docs/images/" + name)
+    usb["assets/bootscreen/revival-v3-flat.png"] = source("assets/bootscreen/revival-v3-flat.png")
     usb["docs/images/README.md"] = source("docs/images/README.md")
     for name in [
         "README.md",
