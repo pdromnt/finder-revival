@@ -102,7 +102,9 @@ generated objects belong in release assets, never Git or the printer filesystem.
 
 The original supplied Orca export, bed texture and bed model are copied unchanged
 under `slicer/orca/`, with an import guide and model attribution/license. They are
-PC-side repository assets, outside the firmware payload and release builder.
+PC-side assets, outside the firmware payload. The USB ZIP includes them alongside
+the guides so extracted documentation works without repository access; the
+installer never copies them to internal printer storage.
 The bed STL retains CC BY-NC-ND 4.0; Unlicense does not replace that asset license.
 
 Do not overwrite tag/release history to replace a faulty artifact. Create a new

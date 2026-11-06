@@ -300,6 +300,18 @@ def main():
         usb["revival/status-screens/" + name] = data
     for doc in sorted((ROOT / "docs").glob("*.md")):
         usb["docs/" + doc.name] = doc.read_bytes()
+    # PC-side reference assets keep the extracted guides usable without repo access.
+    # These are outside payload.tar and are never installed on the printer.
+    for name in (
+        "README.md",
+        "ATTRIBUTION.md",
+        "CC-BY-NC-ND-4.0.txt",
+        "Flashforge Finder.orca_printer",
+        "Printable Bed Model.stl",
+        "Printable Bed Texture.png",
+    ):
+        path = "slicer/orca/" + name
+        usb[path] = source(path)
     for name in ["touchscreen-home.png", "print-sources.png", "settings.png"]:
         usb["docs/images/" + name] = source("docs/images/" + name)
     usb["docs/images/README.md"] = source("docs/images/README.md")

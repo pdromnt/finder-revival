@@ -17,6 +17,8 @@ it to the stick's root. It must contain `0007`, `flashforge_init.sh` and the
 
 Keep the large `runtime-sources.zip` on the PC; do not extract it onto the stick
 or printer. It contains matching source/relink materials, not an installer.
+The included `slicer/orca/` files are PC-side references and are not installed
+on the printer. Keep the presets/bed assets in a stable PC folder for Orca.
 
 SSH is optional. To enable it, add your own ordinary public key as
 `revival/authorized_keys`. Never copy a private key there. Existing owner keys
